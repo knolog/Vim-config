@@ -1,236 +1,81 @@
-" ----------  General settings  ----------
-set nocompatible
-set showmatch
-set ruler
-
-" Term color
+""""""""""""""""""""""""""""""""""""""""""""""""
+"               General settings
+"""""""""""""""""""""""""""""""""""""""""""""""""
 if has('termguicolors')
-  set termguicolors
+    let &t_8f = "[38;2;%lu;%lu;%lum"
+    let &t_8b = "[48;2;%lu;%lu;%lum"
+    set termguicolors
 endif
 set t_Co=256
+set t_ut=
 set background=dark
-
-syntax on
-syntax enable
-
-set hidden
-
+set nocompatible
+set showmatch
+set modeline
+set ruler
+set virtualedit=block
 set title
-
-set laststatus=2
-set showtabline=2
-
-" Encoding
+set secure
+set mouse=nv
+set cursorline
+set backspace=indent,eol,start
+set errorbells
+set visualbell
+set hidden
+set magic
+set fileformats=unix,dos,mac
+set formatoptions+=1
+set formatoptions-=t
+set formatoptions-=o
 set encoding=utf-8
 set fileencoding=utf-8
-
-" Delay
-" https://www.johnhawthorn.com/2012/09/vi-escape-delays/
+set number
+set relativenumber
+set textwidth=80
+set colorcolumn=+1
+set laststatus=2
+set showtabline=2
 set timeoutlen=1000
 set ttimeoutlen=0
-
 set updatetime=100
-
-" Disable error sound
-" https://stackoverflow.com/questions/18589352/how-to-disable-vim-bells-sounds
-set belloff=all
-
-" Enable line number
-set relativenumber
-set number
-
-" Enable back delete in insert mode
-" https://vi.stackexchange.com/questions/2162/why-doesnt-the-backspace-key-work-in-insert-mode
-set backspace=indent,eol,start
-
-" Do not keep backup and swap file
+set history=50
+set undolevels=100
+set undoreload=1000
+set hlsearch
+set incsearch
+set smartcase
+set ignorecase
+set smarttab
+set tabstop=4
+set softtabstop=4
+set expandtab
+set shiftwidth=4
+set clipboard=unnamed
 set nobackup
 set nowritebackup
 set noswapfile
-
-" Maximum number of history
-set history=50
-
-" Fold
-" set foldmethod=indent
-
-" Map leader key to <space>
-let mapleader=" "
-
-" Enable filetype detection
+set wildignore+=*/.git/*,*/.DS_Store,*/tmp/*
+set wildmenu
+syntax on
+syntax enable
 filetype on
 filetype plugin on
-
-" Enable coursor line
-set cursorline
-
-" Indent
-set autoindent
-set nosmartindent
-set shiftround
-set expandtab
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
 filetype indent on
 
-" Highlight search
-" 	vim-cool will remove highight automatically
-set hlsearch 
-set incsearch
-
-" Make it obvious where 80 characters is
-set textwidth=80
-set colorcolumn=+1
-
-" Use system clipboard for copy and paste
-set clipboard=unnamed
-
-" let g:markdown_fenced_languages = ['html', 'python', 'bash=sh']
-
-" Change cursor shape based on mode 
-let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-
-set undolevels=100
-set undoreload=1000
+noremap <Space> <Nop>
+let mapleader="\<Space>"
 
 
 
-" ----------  Keybindings  ----------
 
-"
-map <leader>j1 <Plug>(easymotion-bd-f)
-map <leader>j2 <Plug>(easymotion-s2)
-map <leader>jn <Plug>(easymotion-sn)
-map <leader>jw <Plug>(easymotion-bd-w)
-map <leader>jl <Plug>(easymotion-bd-jk)
-" Normal mode
-nnoremap <leader>qh :nohl<cr> 
-nnoremap <leader>qw :x<cr>
-nnoremap <leader>qf :q!<cr>
-"
-nnoremap <leader>bf :tabf 
-nnoremap <leader>be :tabe<cr>
-nnoremap <leader>bo :tabonly<cr>
-nnoremap <leader>bd :bdelete<cr>
-nnoremap <leader>bD :bdelete!<cr>
-nnoremap <leader>bn gt
-nnoremap <leader>bp gT
-"
-nnoremap <leader>fo :e 
-nnoremap <leader>fs :w<cr>
-nnoremap <leader>fy :let @*=expand("%")<CR>
-nnoremap <leader>fY :let @*=expand("%:p")<CR>
-noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-noremap <leader>fr :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
-"
-nnoremap <leader>vr :source %<cr>
-nnoremap <leader>vi :PlugInstall<cr>
-nnoremap <leader>vd :PlugClean<cr>
-nnoremap <leader>vu :PlugUpdate<cr>
-nnoremap <leader>vl :nno <lt>leader><CR>
-nnoremap <C-e> $
-"
-nnoremap <leader>i >>
-nnoremap <leader>n <<
-nnoremap <leader>H <C-w>H
-nnoremap <leader>L <C-w>L
-"
-noremap <leader>ss :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-noremap <leader>st :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
-nnoremap <leader>sw *
-nnoremap <silent> <leader>si :call InterestingWords('n')<cr>
-nnoremap <silent> <leader>sI :call UncolorAllWords()<cr>
-"
-nnoremap <leader>wv :vnew<cr><C-w>x<C-w>l
-nnoremap <leader>ws :new<cr><C-w>x<C-w>j
-nnoremap <leader>ww :<C-U><C-R>=printf("Leaderf window  %s", "")<CR><CR>
-nnoremap <leader>wh <C-w>h
-nnoremap <leader>wl <C-w>l
-nnoremap <leader>wj <C-w>j
-nnoremap <leader>wk <C-w>k
-nnoremap <leader>wa <C-w>x
-nnoremap <leader>wd <C-w>q
-"
-nnoremap <leader>tr :REPLToggle<cr>
-"
-nnoremap <leader>tt :TagbarToggle<cr>
-"
-nnoremap mm %
-"
-nnoremap <leader>kk dib
-nnoremap <leader>kf di]
-nnoremap <leader>kh di}
-nnoremap <leader>kd di'
-nnoremap <leader>ks di"
-"
-nmap <leader>gj <Plug>(GitGutterNextHunk)
-nmap <leader>gk <Plug>(GitGutterPrevHunk)
-nmap <leader>gp <Plug>(GitGutterPreviewHunk)
-nnoremap <leader>gd :Git diff<cr>
-nnoremap <leader>gb :Git blame<cr>
-nnoremap <leader>gl :Git log<cr> 
-"
-nmap <leader>bb  <Plug>(choosewin)
-" Insert mode
-inoremap jj <Esc>`^
-inoremap <leader>fs <Esc>:w<cr>
-inoremap kk ()<Esc>i
-inoremap fk []<Esc>i
-inoremap hk {}<Esc>i
-inoremap jk <><Esc>i
-inoremap sg \|
-inoremap dg _
-inoremap js +
-inoremap cj *
-inoremap xy <
-inoremap dy >
-inoremap my $
-inoremap yb £
-inoremap qa @
-inoremap yw ?
-inoremap sj ^
-inoremap bf %
-inoremap aa &
-inoremap bw ~
-inoremap gt !
-inoremap jh #
-inoremap <C-f> <right>
-inoremap <C-b> <left>
-" Visual mode
-vnoremap <leader>i >
-vnoremap <leader>n <
-vmap ik S)
-vmap if S]
-vmap ih S}
-vmap id S'
-vmap iy S"
-vmap <leader>ea <Plug>(EasyAlign)
-vnoremap <C-e> $h
-" Terminal mode
-tnoremap <C-h> <C-w>h
-tnoremap <C-l> <C-w>l
-tnoremap <C-j> <C-w>j
-tnoremap <C-k> <C-w>k
-tnoremap <C-n> <C-w>N
-
-
-
-" ----------  Plugins  ----------
-" Vim plugin manager: vim-plug
-" https://github.com/junegunn/vim-plug
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"                   Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
+Plug 'morhetz/gruvbox'
 Plug 'sillybun/vim-repl'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'junegunn/vim-easy-align'
 Plug 'Yggdroot/indentLine'
-Plug 'gilgigilgil/anderson.vim'
-Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 Plug 'tpope/vim-surround'
-Plug 'ajmwagar/vim-deus'
 Plug 'jiangmiao/auto-pairs'
 Plug 'romainl/vim-cool'
 Plug 'lfv89/vim-interestingwords'
@@ -240,40 +85,63 @@ Plug 'majutsushi/tagbar'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'mhinz/vim-startify'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-Plug 'w0ng/vim-hybrid' 
-Plug 'jpalardy/vim-slime' 
-Plug 'srcery-colors/srcery-vim'
-Plug 'airblade/vim-gitgutter' 
-Plug 'tpope/vim-fugitive' 
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 Plug 'ryanoasis/vim-devicons'
-Plug 'cocopon/vaffle.vim' 
+Plug 'cocopon/vaffle.vim'
 Plug 't9md/vim-choosewin'
+Plug 'terryma/vim-expand-region'
+Plug 'dstein64/vim-startuptime'
+Plug 'Shougo/neomru.vim'
+Plug 'osyo-manga/vim-over'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'tyrannicaltoucan/vim-quantum'
+Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'voldikss/vim-browser-search'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/vim-asterisk'
+Plug 'AlessandroYorba/Alduin'
+Plug 'danilo-augusto/vim-afterglow'
 call plug#end()
 
 
 
-" ----------  Plugin configuration  ----------
-" colorscheme
-"	installed colorscheme should be configured after it is loaed
-"	vim cannot find colorscheme if configure it before it is loaded
-"	https://vi.stackexchange.com/questions/11385/vim-says-i-dont-have-solarized-colorscheme-whereas-i-have-that
-" colorscheme anderson
-" colorscheme challenger_deep
-" colorscheme hybrid
-" colorscheme deus
-colorscheme srcery
 
-" airline theme
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"             Plugin configurations
+"""""""""""""""""""""""""""""""""""""""""""""""""
+
+" -------------------  colorscheme  ---------------------
+" let g:gruvbox_invert_selection=0
+" colorscheme gruvbox
+
+" colorscheme hybrid_reverse
+
+" let g:quantum_black=1
+" colorscheme quantum
+
+" let g:alduin_Shout_Dragon_Aspect = 1
+" colorscheme alduin
+
+" let g:afterglow_blackout=1
+" let g:afterglow_inherit_background=1
+colorscheme afterglow
+
+
+" -------------------  airline  ---------------------
 " let g:airline_theme='papercolor'
-" let g:airline_theme='deus'
-" let g:airline_theme='srcery'
-let g:airline_theme='base16'
+" let g:airline_theme='tomorrow'
+" let g:airline_theme='afterglow'
+
+let g:airline_theme='bubblegum'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#branch#format = 2
@@ -284,95 +152,8 @@ let g:airline_powerline_fonts = 1
 " let g:airline#extensions#tabline#left_sep = ' '
 " let g:airline#extensions#tabline#left_alt_sep = '|'
 
-" indentLine
-" let g:indentLine_concealcursor=0
-" let g:indentLine_setColors = 1
-let g:indentLine_char = '┆'
-"   need this in tmux to change indent line color
-"   https://github.com/Yggdroot/indentLine/issues/173
-"   https://github.com/Yggdroot/indentLine/issues/177
-" let g:indentLine_color_gui = '#4c4c4b'
-let g:indentLine_color_gui = '#b7b7b7'
 
-" ctrlp
-" 	https://github.com/ctrlpvim/ctrlp.vim
-" set runtimepath^=~/.vim/bundle/ctrlp.vim
-
-" vim-cool
-let g:CoolTotalMatches = 1
-
-" python-syntax
-let g:python_highlight_all = 1
-
-" vim-repl
-let g:repl_console_name = 'REPL'
-let g:repl_program = {
-			\   'python': 'ipython',
-            \   'default': 'zsh',
-            \   'r': 'R',
-            \   'lua': 'lua',
-            \   'vim': 'vim -e',
-            \   }
-let g:sendtorepl_invoke_key = "<leader>rr"
-let g:repl_cursor_down = 1
-let g:repl_python_automerge = 0
-let g:repl_ipython_version = '7.13'
-let g:repl_stayatrepl_when_open = 0
-let g:repl_position = 3
-" autocmd Filetype python nnoremap <F12> <Esc>:REPLDebugStopAtCurrentLine<Cr>
-" autocmd Filetype python nnoremap <F10> <Esc>:REPLPDBN<Cr>
-" autocmd Filetype python nnoremap <F11> <Esc>:REPLPDBS<Cr>
-
-" vim-sneak
-let g:sneak#label = 1
-
-" vim-easymotion
-let g:EasyMotion_do_mapping = 0
-
-" vim-repeat
-silent! call repeat#set("\<Plug>surround", v:count)
-
-" leaderF
-" don't show the help in normal mode
-let g:Lf_HideHelp = 1
-let g:Lf_UseCache = 0
-let g:Lf_UseVersionControlTool = 0
-let g:Lf_IgnoreCurrentBufferName = 1
-" popup mode
-let g:Lf_WindowPosition = 'popup'
-let g:Lf_PreviewInPopup = 1
-let g:Lf_ShortcutF = "<leader>fp"
-let g:Lf_ShowDevIcons = 1
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "Hack Nerd Font" }
-let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
-let g:Lf_CommandMap = {'<C-T>': ['<CR>']}
-
-" vim-easyalign
-let g:easy_align_ignore_groups = ['Comment', 'String']
-
-" vim-markdown
-let g:vim_markdown_folding_disabled = 1
-let g:vim_markdown_math = 1
-let g:vim_markdown_frontmatter = 1
-let g:vim_markdown_toml_frontmatter = 1
-let g:vim_markdown_json_frontmatter = 1
-let g:vim_markdown_strikethrough = 1
-let g:vim_markdown_auto_insert_bullets = 0
-let g:vim_markdown_new_list_item_indent = 0
-let g:vim_markdown_no_default_key_mappings = 1
-
-" vim-slime
-let g:slime_target = "tmux"
-let g:slime_default_config = {"socket_name": "default", "target_pane": "{right-of}"}
-let g:slime_python_ipython = 1
-let g:slime_preserve_curpos = 0
-
-" vim-gitgutter
-let g:gitgutter_map_keys = 0
-let g:gitgutter_highlight_lines = 1
-let g:gitgutter_highlight_linenrs = 1
-
-" coc
+" -------------------  coc  ---------------------
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -390,7 +171,50 @@ else
   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
-" vaffle
+
+" -------------------  vim-repl  ---------------------
+let g:repl_program = {
+            \   'python': ['ipython','python'],
+            \   'default': ['zsh'],
+            \   'r': ['R'],
+            \   'lua': ['lua'],
+            \   'vim': ['vim -e']
+            \   }
+let g:repl_cursor_down = 1
+let g:repl_python_automerge = 1
+let g:repl_ipython_version = '7'
+let g:repl_position = 3
+let g:repl_console_name = 'REPL'
+let g:sendtorepl_invoke_key = "<leader>rr"
+
+
+" -------------------  vim-sneak  ---------------------
+let g:sneak#label = 1
+
+
+" -------------------  vim-easymotion  ---------------------
+let g:EasyMotion_do_mapping = 0
+
+
+" -------------------  vim-markdown  ---------------------
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_math = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_json_frontmatter = 1
+let g:vim_markdown_strikethrough = 1
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_no_default_key_mappings = 1
+
+
+" -------------------  vim-gitgutter  ---------------------
+let g:gitgutter_map_keys = 0
+let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_linenrs = 1
+
+
+" ------------------------  vaffle  ---------------------------
     "  ----  --------  --------------------------------
     "  Mode  {lhs}     {rhs}
     "  ----  --------  --------------------------------
@@ -414,6 +238,392 @@ endif
 
 let g:vaffle_force_delete = 1
 
-" win-choosewin
+
+" -------------------  vim-choosewin  ---------------------
 let g:choosewin_overlay_enable = 1
+
+
+" -------------------  indentLine  ---------------------
+let g:indentLine_char = '┆'
+let g:indentLine_color_gui = '#b7b7b7'
+
+
+" -------------------  python-syntax  ---------------------
+let g:python_highlight_all = 1
+
+
+" -------------------  vim-browser-search  ---------------------
+let g:browser_search_default_engine = 'google'
+
+
+" -------------------  vim-cool  ---------------------
+let g:CoolTotalMatches = 1
+
+
+" -------------------  fzf  ---------------------
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files('~/', {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
+
+command! -bang -nargs=? -complete=dir Project
+    \ call fzf#vim#files('~/Git', {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
+
+command! -bang -nargs=? -complete=dir CurrentDirectory
+    \ call fzf#vim#files(expand('%:p:h'), {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+command! -bang -nargs=* RgWord
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(expand('<cword>') . ''), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+
+" -------------------  cursor  ---------------------
+" Change cursor shape based on mode
+let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"                  Command
+"""""""""""""""""""""""""""""""""""""""""""""""""
+
+autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufRead,BufNewFile *.md setlocal spell
+command! BufferOnly execute '%bdelete|edit #|normal `"'
+
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""
+"                Key mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""
+
+" -------------------  quit  ---------------------
+" remove highlighting
+nnoremap <leader>qh :nohl<cr>
+" claer message
+nnoremap <leader>qm :<Esc>
+" save and quite
+nnoremap <leader>qw :x<cr>
+" force quite
+nnoremap <leader>qf :q!<cr>
+
+
+" -------------------  buffers  ---------------------
+" open {file}
+nnoremap <leader>be :e<Space>
+" delete all other buffers
+nnoremap <leader>bo :BufferOnly<cr>:bn<cr>:bd<cr>
+" delete current buffer
+nnoremap <leader>bd :bdelete<cr>
+" force delete current buffer
+nnoremap <leader>bD :bdelete!<cr>
+" next buffer
+nnoremap <leader>bn :bn<cr>
+" previous buffer
+nnoremap <leader>bp :bp<cr>
+" list buffers
+nnoremap <leader>bb :<C-u>Buffers<cr>
+" source buffer
+nnoremap <leader>bs :source %<cr>
+
+
+" -------------------  tabs  ---------------------
+" open {file} in new tab
+nnoremap <leader>tf :tabf
+" open an empty tab
+nnoremap <leader>te :tabe<cr>
+" close all other tabs
+nnoremap <leader>to :tabonly<cr>
+" close current tab
+nnoremap <leader>td :tabclose<cr>
+" force close current tab
+nnoremap <leader>tD :tabclose!<cr>
+" next tab
+nnoremap <leader>tn gt
+" previous tab
+nnoremap <leader>tp gT
+" list tabs or buffers
+nmap <leader>tb <Plug>(choosewin)
+
+
+" -------------------  files  ---------------------
+" save file in normal mode
+nnoremap <leader>fs :w<cr>
+" save file in insert mode
+inoremap <leader>fs <Esc>:w<cr>
+" open .vimrc
+nnoremap <leader>fd :e ~/.vimrc<cr>
+" search files
+nnoremap <leader>ff :<C-u>Files:<cr>
+" search files in current directory
+nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
+" search files in my git project
+nnoremap <leader>fp :<C-u>Project:<cr>
+" search most recent files
+nnoremap <leader>fr :<C-u>History<cr>
+" copy file name only
+nnoremap <leader>fY :let @*=expand("%")<CR>
+" copy file name with full path
+nnoremap <leader>fy :let @*=expand("%:p")<CR>
+
+
+" -------------------  Application  ---------------------
+" Install plugins
+nnoremap <leader>ai :PlugInstall<cr>
+" Update plugins
+nnoremap <leader>au :PlugUpdate<cr>
+" Clean plugins
+nnoremap <leader>ad :PlugClean<cr>
+
+
+" -------------------  Windows  ---------------------
+" open {file} from homoe directory and split window vertically
+nnoremap <leader>wv :Vex ~/<cr><C-w>x
+" open {file} from homoe directory and split window horizontally
+nnoremap <leader>ws :Sex ~/<cr><C-w>x
+" open an empty buffer and split window vertically
+nnoremap <leader>wV :vnew<cr><C-w>x<C-w>l
+" open an empty buffer and split window horizontally
+nnoremap <leader>wS :new<cr><C-w>x<C-w>j
+" focus on the window on the left
+nnoremap <leader>wh <C-w>h
+" focus on the window on the right
+nnoremap <leader>wl <C-w>l
+" focus on the window on the bottom
+nnoremap <leader>wj <C-w>j
+" focus on the window on the top
+nnoremap <leader>wk <C-w>k
+" swap window
+nnoremap <leader>wa <C-w>x
+" close window
+nnoremap <leader>wd <C-w>q
+" move window to the left
+nnoremap <leader>wH <C-w>H
+" move window to the right
+nnoremap <leader>wL <C-w>L
+" Convert to normal mode in terminal buffer
+tnoremap <C-o> <C-w>N
+" focus on left window from terminal buffer
+tnoremap <C-h> <C-w>h
+" focus on right window from terminal buffer
+tnoremap <C-l> <C-w>l
+" focus on bottom window from terminal buffer
+tnoremap <C-j> <C-w>j
+" focus on top window from terminal buffer
+tnoremap <C-k> <C-w>k
+
+
+" -------------------  Search  ---------------------
+" ag search
+nnoremap <leader>sa :<C-u>Ag
+" search lines in current buffer
+nnoremap <leader>ss :<C-u>BLines<cr>
+" search tags in current buffer
+nnoremap <leader>st :<C-u>Btags<cr>
+" search commands
+nnoremap <leader>sc :<C-u>Commands<cr>
+" rg search
+nnoremap <leader>sg :<C-u>Rg
+" rg search cursor word
+nnoremap <leader>sw :<C-u>RgWord<cr>
+" highlight all occrances of cursor word
+nnoremap <silent> <leader>si :call InterestingWords('n')<cr>
+nnoremap <silent> <leader>sI :call UncolorAllWords()<cr>
+" google search selected text
+vmap <silent> <leader>so <Plug>SearchVisual
+" highlight cursor word in current buffer
+nnoremap mc *
+
+
+" -------------------  Jump  ---------------------
+" jump 1 character
+map <leader>j1 <Plug>(easymotion-bd-f)
+" jump 2 characters
+map <leader>j2 <Plug>(easymotion-s2)
+" jump n characters
+map <leader>jn <Plug>(easymotion-sn)
+" jump words
+map <leader>jw <Plug>(easymotion-bd-w)
+" jump lines
+map <leader>jl <Plug>(easymotion-bd-jk)
+" jump between brackets
+nnoremap mm %
+
+
+" -------------------  Toggle  ---------------------
+" toggle tagbar
+nnoremap <leader>ot :TagbarToggle<cr>
+" toggle vaffle
+nnoremap <leader>od :Vaffle<cr>
+" toggle startuptime
+nnoremap <leader>os :StartupTime<cr>
+" toggle overcommandline
+nnoremap <leader>oc :OverCommandLine<cr>
+" toggle startify
+nnoremap <leader>oo :Startify<cr>
+
+
+" -------------------  Text  ---------------------
+" select text in parenthesis
+nnoremap <leader>ek vib
+" select text in square brackets
+nnoremap <leader>ef vi]
+" select text in curly brackets
+nnoremap <leader>eh vi}
+" select text in sigle quotations
+nnoremap <leader>ed vi'
+" select text in double quotations
+nnoremap <leader>ey vi"
+" interactive search and repalce in entire buffer
+nmap <leader>es :OverCommandLine<cr>%s///g<left><left>
+" interactive search and repalce in selected text
+vmap <leader>es :OverCommandLine<cr>s///g<left><left>
+" text expansion
+map <leader>ee <Plug>(expand_region_expand)
+" text shrinking
+map <leader>eE <Plug>(expand_region_shrink)
+" move to begining of line in normal mode
+nnoremap <C-a> 0
+" move to end of line in normal mode
+nnoremap <C-e> $
+" move to begining of line in visual mode
+vnoremap <C-a> 0
+" move to end of line in visual mode
+vnoremap <C-e> $h
+" move to begining of line in insert mode
+inoremap <C-a> <Esc>I
+" move to end of line in insert mode
+inoremap <C-e> <Esc>A
+" move cursor forward in insert mode
+inoremap <C-f> <right>
+" move cursor backward in insert mode
+inoremap <C-b> <left>
+" move cursor forward in command mode
+cnoremap <C-f> <right>
+" move cursor backward in command mode
+cnoremap <C-b> <left>
+" indent in normal mode
+nnoremap <leader>i >>
+" unindent in normal mode
+nnoremap <leader>n <<
+" indent in visual mode
+vnoremap <leader>i >
+" unindent in visual mode
+vnoremap <leader>n <
+" insert parenthesis for selected text
+vmap ik S)
+" insert square bracket for selected text
+vmap if S]
+" insert curly bracket for selected text
+vmap ih S}
+" insert single quotation for selected text
+vmap id S'
+" insert double quotation for selected text
+vmap iy S"
+" align selected text
+vmap <leader>ea <Plug>(EasyAlign)
+" escape in insert mode
+inoremap fd <Esc>
+" escape in visual mode
+vnoremap fd <Esc>
+
+
+" -------------------  Git  ---------------------
+" git next change
+nmap <leader>gj <Plug>(GitGutterNextHunk)
+" git previous change
+nmap <leader>gk <Plug>(GitGutterPrevHunk)
+" git preview
+nmap <leader>gp <Plug>(GitGutterPreviewHunk)
+" git diff
+nnoremap <leader>gd :Git diff<cr>
+" git blame
+nnoremap <leader>gb :Git blame<cr>
+" git log
+nnoremap <leader>gl :Git log<cr>
+
+
+" -------------------  Python  ---------------------
+augroup python_key_map
+    autocmd! python_key_map
+    " toggle ipython
+    autocmd Filetype python nnoremap <buffer> <leader>rt :REPLToggle<cr>
+    " hide ipython
+    autocmd Filetype python nnoremap <buffer> <leader>rh :REPLHide<cr>
+    " unhide ipython
+    autocmd Filetype python nnoremap <buffer> <leader>ru :REPLUnhide<cr><C-w>q
+augroup end
+
+
+" -------------------  Markdown  ---------------------
+" preview markdown
+nmap <leader>mp <Plug>MarkdownPreview
+" stop preview markdown
+nmap <leader>ms <Plug>MarkdownPreviewStop
+nmap <leader>mt <Plug>MarkdownPreviewToggle
+
+
+" -------------------  Typing  ---------------------
+inoremap kk ()<Esc>i
+inoremap fk []<Esc>i
+inoremap hk {}<Esc>i
+inoremap jk <><Esc>i
+inoremap sg \|
+inoremap dg _
+inoremap js +
+inoremap cj *
+inoremap xy <
+inoremap dy >
+inoremap lk $
+inoremap yb £
+inoremap qa @
+inoremap yw ?
+inoremap sj ^
+inoremap bf %
+inoremap aa &
+inoremap bw ~
+inoremap gt !
+inoremap jh #
+inoremap jd -
+inoremap dh =
+cnoremap kk ()
+cnoremap fk []
+cnoremap hk {}
+cnoremap jk <>
+cnoremap dg _
+cnoremap js +
+cnoremap jk <>
+cnoremap bf %
+cnoremap aa &
+cnoremap bw ~
+cnoremap gt !
+cnoremap jh #
+cnoremap jd -
+cnoremap sj ^
+cnoremap lk $
+cnoremap dh =
+tnoremap kk ()
+tnoremap fk []
+tnoremap hk {}
+tnoremap jk <>
+tnoremap dg _
+tnoremap js +
+tnoremap jk <>
+tnoremap bf %
+tnoremap aa &
+tnoremap bw ~
+tnoremap gt !
+tnoremap jh #
+tnoremap jd -
+tnoremap sj ^
+tnoremap lk $
+tnoremap dh =
 
