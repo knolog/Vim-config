@@ -1,3 +1,2 @@
-This is my `vimrc` and it is configured for my personal perference and
-workflow.
+This is my `vimrc` and it is configured for my personal preference and workflow.
 
