@@ -1,4 +1,4 @@
-""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""
 "               General settings
 """""""""""""""""""""""""""""""""""""""""""""""""
 if has('termguicolors')
@@ -61,8 +61,6 @@ syntax enable
 filetype on
 filetype plugin on
 filetype indent on
-
-noremap <Space> <Nop>
 let mapleader="\<Space>"
 
 
@@ -107,9 +105,11 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/vim-asterisk'
 Plug 'AlessandroYorba/Alduin'
 Plug 'danilo-augusto/vim-afterglow'
+Plug 'wellle/visual-split.vim'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'dhruvasagar/vim-table-mode'
 call plug#end()
 
 
@@ -194,6 +194,9 @@ let g:sneak#label = 1
 
 " -------------------  vim-easymotion  ---------------------
 let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_prompt = 'Jump to → '
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
 
 
 " -------------------  vim-markdown  ---------------------
@@ -206,6 +209,9 @@ let g:vim_markdown_strikethrough = 1
 let g:vim_markdown_auto_insert_bullets = 0
 let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_no_default_key_mappings = 1
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_conceal = 0
+autocmd BufRead,BufNewFile *.md setlocal spell
 
 
 " -------------------  vim-gitgutter  ---------------------
@@ -294,9 +300,26 @@ let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 "                  Command
 """""""""""""""""""""""""""""""""""""""""""""""""
 
+" delete trailing space
 autocmd BufWritePre * :%s/\s\+$//e
-autocmd BufRead,BufNewFile *.md setlocal spell
+
+" delete other buffers
 command! BufferOnly execute '%bdelete|edit #|normal `"'
+
+" automatic table mode
+function! s:isAtStartOfLine(mapping)
+  let text_before_cursor = getline('.')[0 : col('.')-1]
+  let mapping_pattern = '\V' . escape(a:mapping, '\')
+  let comment_pattern = '\V' . escape(substitute(&l:commentstring, '%s.*$', '', ''), '\')
+  return (text_before_cursor =~? '^' . ('\v(' . comment_pattern . '\v)?') . '\s*\v' . mapping_pattern . '\v$')
+endfunction
+
+inoreabbrev <expr> <bar><bar>
+          \ <SID>isAtStartOfLine('\|\|') ?
+          \ '<c-o>:TableModeEnable<cr><bar><space><bar><left><left>' : '<bar><bar>'
+inoreabbrev <expr> __
+          \ <SID>isAtStartOfLine('__') ?
+          \ '<c-o>:silent! TableModeDisable<cr>' : '__'
 
 
 
@@ -305,7 +328,7 @@ command! BufferOnly execute '%bdelete|edit #|normal `"'
 "                Key mappings
 """""""""""""""""""""""""""""""""""""""""""""""""
 
-" -------------------  quit  ---------------------
+" -------------------  Quit  ---------------------
 " remove highlighting
 nnoremap <leader>qh :nohl<cr>
 " claer message
@@ -316,7 +339,7 @@ nnoremap <leader>qw :x<cr>
 nnoremap <leader>qf :q!<cr>
 
 
-" -------------------  buffers  ---------------------
+" -------------------  Buffers  ---------------------
 " open {file}
 nnoremap <leader>be :e<Space>
 " delete all other buffers
@@ -335,9 +358,9 @@ nnoremap <leader>bb :<C-u>Buffers<cr>
 nnoremap <leader>bs :source %<cr>
 
 
-" -------------------  tabs  ---------------------
+" -------------------  Tabs  ---------------------
 " open {file} in new tab
-nnoremap <leader>tf :tabf
+nnoremap <leader>tf :tabf<Space>
 " open an empty tab
 nnoremap <leader>te :tabe<cr>
 " close all other tabs
@@ -354,7 +377,7 @@ nnoremap <leader>tp gT
 nmap <leader>tb <Plug>(choosewin)
 
 
-" -------------------  files  ---------------------
+" -------------------  Files  ---------------------
 " save file in normal mode
 nnoremap <leader>fs :w<cr>
 " save file in insert mode
@@ -382,6 +405,10 @@ nnoremap <leader>ai :PlugInstall<cr>
 nnoremap <leader>au :PlugUpdate<cr>
 " Clean plugins
 nnoremap <leader>ad :PlugClean<cr>
+
+
+" -------------------  Others  ---------------------
+noremap <Space> <Nop>
 
 
 " -------------------  Windows  ---------------------
@@ -419,6 +446,8 @@ tnoremap <C-l> <C-w>l
 tnoremap <C-j> <C-w>j
 " focus on top window from terminal buffer
 tnoremap <C-k> <C-w>k
+" narrow window
+vnoremap <leader>wn :VSSplit<cr>
 
 
 " -------------------  Search  ---------------------
@@ -536,6 +565,12 @@ inoremap fd <Esc>
 vnoremap fd <Esc>
 
 
+" -------------------  incsearch.vim  ---------------------
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
+
+
 " -------------------  Git  ---------------------
 " git next change
 nmap <leader>gj <Plug>(GitGutterNextHunk)
@@ -549,6 +584,8 @@ nnoremap <leader>gd :Git diff<cr>
 nnoremap <leader>gb :Git blame<cr>
 " git log
 nnoremap <leader>gl :Git log<cr>
+" git status
+nnoremap <leader>gs :Gstatus<cr>
 
 
 " -------------------  Python  ---------------------
