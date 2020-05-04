@@ -50,6 +50,7 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=4
+set cindent
 set clipboard=unnamed
 set nobackup
 set nowritebackup
@@ -110,6 +111,14 @@ Plug 'danilo-augusto/vim-afterglow'
 Plug 'wellle/visual-split.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'simnalamburt/vim-mundo'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'justinmk/vim-gtfo'
+Plug 'AndrewRadev/sideways.vim'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'tpope/vim-eunuch'
+Plug 'dyng/ctrlsf.vim'
+Plug 'junegunn/limelight.vim'
 call plug#end()
 
 
@@ -133,15 +142,21 @@ call plug#end()
 
 " let g:afterglow_blackout=1
 " let g:afterglow_inherit_background=1
-colorscheme afterglow
+" colorscheme afterglow
+
+let g:neodark#use_256color = 1
+let g:neodark#terminal_transparent = 1
+colorscheme neodark
 
 
 " -------------------  airline  ---------------------
 " let g:airline_theme='papercolor'
 " let g:airline_theme='tomorrow'
 " let g:airline_theme='afterglow'
+" let g:airline_theme='bubblegum'
 
-let g:airline_theme='bubblegum'
+let g:airline_theme='neodark'
+
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#branch#format = 2
@@ -266,6 +281,63 @@ let g:browser_search_default_engine = 'google'
 let g:CoolTotalMatches = 1
 
 
+" -------------------  splitjoin  ---------------------
+    " Dicts ~
+    " >
+    " knights = {'gallahad': 'the pure', 'robin': 'the brave'}
+
+    " knights = {
+    "         'gallahad': 'the pure',
+    "         'robin': 'the brave'
+    "         }
+    " <
+    " Lists ~
+    " >
+    " spam = [1, 2, 3]
+
+    " spam = [1,
+    "         2,
+    "         3]
+    " <
+    " Tuples ~
+    " >
+    " spam = (1, 2, 3)
+
+    " spam = (1,
+    "         2,
+    "         3)
+    " <
+    " Statements ~
+    " >
+    " if foo: bar()
+
+    " if foo:
+    "     bar()
+    " <
+    " Imports ~
+    " >
+    " from foo import bar, baz
+
+    " from foo import bar,\
+    "         baz
+    " <
+    " Assignment ~
+    " >
+    " a, b = foo("bar"), [one, two, three]
+
+    " a = foo("bar")
+    " b = [one, two, three]
+
+    " un, pack = something
+
+    " un = something[0]
+    " pack = something[1]
+    " <
+
+let g:splitjoin_split_mapping = ''
+let g:splitjoin_join_mapping = ''
+
+
 " -------------------  fzf  ---------------------
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files('~/', {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
@@ -303,8 +375,10 @@ let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 " delete trailing space
 autocmd BufWritePre * :%s/\s\+$//e
 
+
 " delete other buffers
 command! BufferOnly execute '%bdelete|edit #|normal `"'
+
 
 " automatic table mode
 function! s:isAtStartOfLine(mapping)
@@ -409,6 +483,7 @@ nnoremap <leader>ad :PlugClean<cr>
 
 " -------------------  Others  ---------------------
 noremap <Space> <Nop>
+" gof: reveal current file in finder (default mapping of gtfo.vim)
 
 
 " -------------------  Windows  ---------------------
@@ -498,6 +573,12 @@ nnoremap <leader>os :StartupTime<cr>
 nnoremap <leader>oc :OverCommandLine<cr>
 " toggle startify
 nnoremap <leader>oo :Startify<cr>
+" toggle undo tree
+nnoremap <leader>ou :MundoToggle<CR>
+" toggle on/off limelight
+nmap <Leader>ol :Limelight<cr>
+xmap <Leader>ol :Limelight<cr>
+nmap <Leader>oL :Limelight!<cr>
 
 
 " -------------------  Text  ---------------------
@@ -512,13 +593,20 @@ nnoremap <leader>ed vi'
 " select text in double quotations
 nnoremap <leader>ey vi"
 " interactive search and repalce in entire buffer
-nmap <leader>es :OverCommandLine<cr>%s///g<left><left>
+nmap <leader>er :OverCommandLine<cr>%s///g<left><left>
 " interactive search and repalce in selected text
-vmap <leader>es :OverCommandLine<cr>s///g<left><left>
+vmap <leader>er :OverCommandLine<cr>s///g<left><left>
 " text expansion
 map <leader>ee <Plug>(expand_region_expand)
 " text shrinking
 map <leader>eE <Plug>(expand_region_shrink)
+" join lines
+nmap <Leader>ej :SplitjoinJoin<cr>
+" split lines
+nmap <Leader>es :SplitjoinSplit<cr>
+" switch function argument
+nnoremap <leader>el :SidewaysLeft<cr>
+nnoremap <leader>eL :SidewaysRight<cr>
 " move to begining of line in normal mode
 nnoremap <C-a> 0
 " move to end of line in normal mode
