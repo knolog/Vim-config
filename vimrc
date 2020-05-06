@@ -91,7 +91,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'ryanoasis/vim-devicons'
 Plug 'cocopon/vaffle.vim'
-Plug 't9md/vim-choosewin'
 Plug 'terryma/vim-expand-region'
 Plug 'dstein64/vim-startuptime'
 Plug 'Shougo/neomru.vim'
@@ -119,6 +118,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-eunuch'
 Plug 'dyng/ctrlsf.vim'
 Plug 'junegunn/limelight.vim'
+Plug 'jpalardy/vim-slime'
 call plug#end()
 
 
@@ -153,19 +153,18 @@ colorscheme neodark
 " let g:airline_theme='papercolor'
 " let g:airline_theme='tomorrow'
 " let g:airline_theme='afterglow'
-" let g:airline_theme='bubblegum'
+" let g:airline_theme='neodark'
 
-let g:airline_theme='neodark'
+let g:airline_theme='bubblegum'
 
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#branch#format = 2
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-let g:airline_powerline_fonts = 1
-" let g:airline#extensions#tabline#left_sep = ' '
-" let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#tab_nr_type = 2
+au VimEnter * let [g:airline_section_a, g:airline_section_b] = [airline#section#create(['mode', 'branch', 'crypt', 'paste', 'keymap', 'capslock', 'xkblayout', 'iminsert']), airline#section#create(['hunks', 'spell'])]
 
 
 " -------------------  coc  ---------------------
@@ -260,10 +259,6 @@ let g:gitgutter_highlight_linenrs = 1
 let g:vaffle_force_delete = 1
 
 
-" -------------------  vim-choosewin  ---------------------
-let g:choosewin_overlay_enable = 1
-
-
 " -------------------  indentLine  ---------------------
 let g:indentLine_char = '┆'
 let g:indentLine_color_gui = '#b7b7b7'
@@ -279,6 +274,12 @@ let g:browser_search_default_engine = 'google'
 
 " -------------------  vim-cool  ---------------------
 let g:CoolTotalMatches = 1
+
+
+" -------------------  vim-slime  ---------------------
+let g:slime_target = "tmux"
+let g:slime_default_config = {"socket_name": "default","target_pane": "{right-of}"}
+let g:slime_python_ipython = 1
 
 
 " -------------------  splitjoin  ---------------------
@@ -447,8 +448,12 @@ nnoremap <leader>tD :tabclose!<cr>
 nnoremap <leader>tn gt
 " previous tab
 nnoremap <leader>tp gT
-" list tabs or buffers
-nmap <leader>tb <Plug>(choosewin)
+" move tab focus
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>tn <Plug>AirlineSelectPrevTab
+nmap <leader>tp <Plug>AirlineSelectNextTab
 
 
 " -------------------  Files  ---------------------
@@ -527,7 +532,8 @@ vnoremap <leader>wn :VSSplit<cr>
 
 " -------------------  Search  ---------------------
 " ag search
-nnoremap <leader>sa :<C-u>Ag
+nnoremap <leader>sa :<C-u>Ag<Space>
+nnoremap <leader>sA :<C-u>CtrlSF<Space>
 " search lines in current buffer
 nnoremap <leader>ss :<C-u>BLines<cr>
 " search tags in current buffer
@@ -535,7 +541,7 @@ nnoremap <leader>st :<C-u>Btags<cr>
 " search commands
 nnoremap <leader>sc :<C-u>Commands<cr>
 " rg search
-nnoremap <leader>sg :<C-u>Rg
+nnoremap <leader>sg :<C-u>Rg<Space>
 " rg search cursor word
 nnoremap <leader>sw :<C-u>RgWord<cr>
 " highlight all occrances of cursor word
@@ -593,9 +599,9 @@ nnoremap <leader>ed vi'
 " select text in double quotations
 nnoremap <leader>ey vi"
 " interactive search and repalce in entire buffer
-nmap <leader>er :OverCommandLine<cr>%s///g<left><left>
+nmap <leader>er :OverCommandLine<cr>%s///g<left><left><left>
 " interactive search and repalce in selected text
-vmap <leader>er :OverCommandLine<cr>s///g<left><left>
+vmap <leader>er :OverCommandLine<cr>s///g<left><left><left>
 " text expansion
 map <leader>ee <Plug>(expand_region_expand)
 " text shrinking
@@ -605,8 +611,8 @@ nmap <Leader>ej :SplitjoinJoin<cr>
 " split lines
 nmap <Leader>es :SplitjoinSplit<cr>
 " switch function argument
-nnoremap <leader>el :SidewaysLeft<cr>
-nnoremap <leader>eL :SidewaysRight<cr>
+nnoremap <leader>eL :SidewaysLeft<cr>
+nnoremap <leader>el :SidewaysRight<cr>
 " move to begining of line in normal mode
 nnoremap <C-a> 0
 " move to end of line in normal mode
