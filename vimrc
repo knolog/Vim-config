@@ -119,6 +119,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'dyng/ctrlsf.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'jpalardy/vim-slime'
+Plug 'poliquin/stata-vim'
 call plug#end()
 
 
@@ -280,6 +281,8 @@ let g:CoolTotalMatches = 1
 let g:slime_target = "tmux"
 let g:slime_default_config = {"socket_name": "default","target_pane": "{right-of}"}
 let g:slime_python_ipython = 1
+let g:slime_preserve_curpos = 1
+let g:slime_dont_ask_default = 1
 
 
 " -------------------  splitjoin  ---------------------
@@ -657,6 +660,24 @@ vmap <leader>ea <Plug>(EasyAlign)
 inoremap fd <Esc>
 " escape in visual mode
 vnoremap fd <Esc>
+" visual selection text including surrounding
+nnoremap vak va)
+nnoremap vaf va]
+nnoremap vah va}
+nnoremap vad va'
+nnoremap vay va"
+" delete text including surrounding
+nnoremap dak da)
+nnoremap daf da]
+nnoremap dah da}
+nnoremap dad da'
+nnoremap day da"
+" delete surrounding
+nmap dsk ds)
+nmap dsf ds]
+nmap dsh ds}
+nmap dsd ds'
+nmap dsy ds"
 
 
 " -------------------  incsearch.vim  ---------------------
@@ -709,7 +730,7 @@ inoremap hk {}<Esc>i
 inoremap jk <><Esc>i
 inoremap sg \|
 inoremap dg _
-inoremap js +
+inoremap ji +
 inoremap cj *
 inoremap xy <
 inoremap dy >
@@ -723,21 +744,20 @@ inoremap aa &
 inoremap bw ~
 inoremap gt !
 inoremap jh #
-inoremap jd -
+inoremap jn -
 inoremap dh =
 cnoremap kk ()
 cnoremap fk []
 cnoremap hk {}
 cnoremap jk <>
 cnoremap dg _
-cnoremap js +
-cnoremap jk <>
+cnoremap ji +
 cnoremap bf %
 cnoremap aa &
 cnoremap bw ~
 cnoremap gt !
 cnoremap jh #
-cnoremap jd -
+cnoremap jn -
 cnoremap sj ^
 cnoremap lk $
 cnoremap dh =
@@ -746,14 +766,13 @@ tnoremap fk []
 tnoremap hk {}
 tnoremap jk <>
 tnoremap dg _
-tnoremap js +
-tnoremap jk <>
+tnoremap ji +
 tnoremap bf %
 tnoremap aa &
 tnoremap bw ~
 tnoremap gt !
 tnoremap jh #
-tnoremap jd -
+tnoremap jn -
 tnoremap sj ^
 tnoremap lk $
 tnoremap dh =
