@@ -31,8 +31,7 @@ set encoding=utf-8
 set fileencoding=utf-8
 set number
 set relativenumber
-set textwidth=80
-set colorcolumn=+1
+set colorcolumn=80
 set laststatus=2
 set showtabline=2
 set timeoutlen=1000
@@ -50,7 +49,6 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=4
-set cindent
 set clipboard=unnamed
 set nobackup
 set nowritebackup
@@ -98,14 +96,12 @@ Plug 'osyo-manga/vim-over'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'voldikss/vim-browser-search'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'haya14busa/incsearch.vim'
-Plug 'AlessandroYorba/Alduin'
 Plug 'danilo-augusto/vim-afterglow'
 Plug 'wellle/visual-split.vim'
 Plug 'terryma/vim-multiple-cursors'
@@ -115,11 +111,13 @@ Plug 'KeitaNakamura/neodark.vim'
 Plug 'justinmk/vim-gtfo'
 Plug 'AndrewRadev/sideways.vim'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'tpope/vim-eunuch'
 Plug 'dyng/ctrlsf.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'poliquin/stata-vim'
+Plug 'nanotech/jellybeans.vim'
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'joshdick/onedark.vim'
 call plug#end()
 
 
@@ -135,19 +133,17 @@ call plug#end()
 
 " colorscheme hybrid_reverse
 
-" let g:quantum_black=1
-" colorscheme quantum
-
-" let g:alduin_Shout_Dragon_Aspect = 1
-" colorscheme alduin
-
 " let g:afterglow_blackout=1
 " let g:afterglow_inherit_background=1
 " colorscheme afterglow
 
-let g:neodark#use_256color = 1
-let g:neodark#terminal_transparent = 1
-colorscheme neodark
+" let g:neodark#use_256color = 1
+" let g:neodark#terminal_transparent = 1
+" colorscheme neodark
+
+" colorscheme jellybeans
+
+colorscheme onedark
 
 
 " -------------------  airline  ---------------------
@@ -155,8 +151,9 @@ colorscheme neodark
 " let g:airline_theme='tomorrow'
 " let g:airline_theme='afterglow'
 " let g:airline_theme='neodark'
+" let g:airline_theme='bubblegum'
 
-let g:airline_theme='bubblegum'
+let g:airline_theme='wombat'
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
@@ -342,6 +339,18 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 
 
+" -------------------  Leaderf  ---------------------
+let g:Lf_HideHelp = 1
+let g:Lf_UseCache = 0
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_IgnoreCurrentBufferName = 0
+let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+let g:Lf_ShortcutF = "<leader>ff"
+
+
 " -------------------  fzf  ---------------------
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files('~/', {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
@@ -382,6 +391,10 @@ autocmd BufWritePre * :%s/\s\+$//e
 
 " delete other buffers
 command! BufferOnly execute '%bdelete|edit #|normal `"'
+
+
+" python
+autocmd BufRead,BufNewFile *.py setlocal textwidth=80
 
 
 " automatic table mode
@@ -431,7 +444,8 @@ nnoremap <leader>bn :bn<cr>
 " previous buffer
 nnoremap <leader>bp :bp<cr>
 " list buffers
-nnoremap <leader>bb :<C-u>Buffers<cr>
+noremap <leader>bb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
+nnoremap <leader>bB :<C-u>Buffers<cr>
 " source buffer
 nnoremap <leader>bs :source %<cr>
 
@@ -467,17 +481,18 @@ inoremap <leader>fs <Esc>:w<cr>
 " open .vimrc
 nnoremap <leader>fd :e ~/.vimrc<cr>
 " search files
-nnoremap <leader>ff :<C-u>Files:<cr>
+nnoremap <leader>fF :<C-u>Files:<cr>
 " search files in current directory
 nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
 " search files in my git project
 nnoremap <leader>fp :<C-u>Project:<cr>
 " search most recent files
-nnoremap <leader>fr :<C-u>History<cr>
+noremap <leader>fr :<C-U><C-R>=printf("Leaderf mru %s", "")<cr><cr>
+nnoremap <leader>fR :<C-u>History<cr>
 " copy file name only
-nnoremap <leader>fY :let @*=expand("%")<CR>
+nnoremap <leader>fY :let @*=expand("%")<cr>
 " copy file name with full path
-nnoremap <leader>fy :let @*=expand("%:p")<CR>
+nnoremap <leader>fy :let @*=expand("%:p")<cr>
 
 
 " -------------------  Application  ---------------------
@@ -491,6 +506,8 @@ nnoremap <leader>ad :PlugClean<cr>
 
 " -------------------  Others  ---------------------
 noremap <Space> <Nop>
+noremap j gj
+noremap k gk
 " gof: reveal current file in finder (default mapping of gtfo.vim)
 
 
@@ -529,8 +546,8 @@ tnoremap <C-l> <C-w>l
 tnoremap <C-j> <C-w>j
 " focus on top window from terminal buffer
 tnoremap <C-k> <C-w>k
-" narrow window
-vnoremap <leader>wn :VSSplit<cr>
+" split a mini window
+vnoremap <leader>wm :VSSplit<cr>
 
 
 " -------------------  Search  ---------------------
@@ -538,15 +555,18 @@ vnoremap <leader>wn :VSSplit<cr>
 nnoremap <leader>sa :<C-u>Ag<Space>
 nnoremap <leader>sA :<C-u>CtrlSF<Space>
 " search lines in current buffer
-nnoremap <leader>ss :<C-u>BLines<cr>
+noremap <leader>ss :<C-U><C-R>=printf("Leaderf line %s", "")<cr><cr>
+nnoremap <leader>sS :<C-u>BLines<cr>
 " search tags in current buffer
-nnoremap <leader>st :<C-u>Btags<cr>
+noremap <leader>st :<C-U><C-R>=printf("Leaderf bufTag %s", "")<cr><cr>
+nnoremap <leader>sT :<C-u>Btags<cr>
 " search commands
 nnoremap <leader>sc :<C-u>Commands<cr>
 " rg search
 nnoremap <leader>sg :<C-u>Rg<Space>
 " rg search cursor word
 nnoremap <leader>sw :<C-u>RgWord<cr>
+noremap <leader>sW :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<cr><cr>
 " highlight all occrances of cursor word
 nnoremap <silent> <leader>si :call InterestingWords('n')<cr>
 nnoremap <silent> <leader>sI :call UncolorAllWords()<cr>
