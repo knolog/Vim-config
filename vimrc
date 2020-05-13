@@ -116,7 +116,6 @@ Plug 'junegunn/limelight.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'poliquin/stata-vim'
 Plug 'nanotech/jellybeans.vim'
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'joshdick/onedark.vim'
 call plug#end()
 
@@ -186,7 +185,7 @@ endif
 
 " -------------------  vim-repl  ---------------------
 let g:repl_program = {
-            \   'python': ['ipython','python'],
+            \   'python': ['ipython'],
             \   'default': ['zsh'],
             \   'r': ['R'],
             \   'lua': ['lua'],
@@ -339,18 +338,6 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 
 
-" -------------------  Leaderf  ---------------------
-let g:Lf_HideHelp = 1
-let g:Lf_UseCache = 0
-let g:Lf_UseVersionControlTool = 0
-let g:Lf_IgnoreCurrentBufferName = 0
-let g:Lf_WindowPosition = 'popup'
-let g:Lf_PreviewInPopup = 1
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
-let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
-let g:Lf_ShortcutF = "<leader>ff"
-
-
 " -------------------  fzf  ---------------------
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files('~/', {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
@@ -444,8 +431,7 @@ nnoremap <leader>bn :bn<cr>
 " previous buffer
 nnoremap <leader>bp :bp<cr>
 " list buffers
-noremap <leader>bb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-nnoremap <leader>bB :<C-u>Buffers<cr>
+nnoremap <leader>bb :<C-u>Buffers<cr>
 " source buffer
 nnoremap <leader>bs :source %<cr>
 
@@ -487,8 +473,7 @@ nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
 " search files in my git project
 nnoremap <leader>fp :<C-u>Project:<cr>
 " search most recent files
-noremap <leader>fr :<C-U><C-R>=printf("Leaderf mru %s", "")<cr><cr>
-nnoremap <leader>fR :<C-u>History<cr>
+nnoremap <leader>fr :<C-u>History<cr>
 " copy file name only
 nnoremap <leader>fY :let @*=expand("%")<cr>
 " copy file name with full path
@@ -555,18 +540,15 @@ vnoremap <leader>wm :VSSplit<cr>
 nnoremap <leader>sa :<C-u>Ag<Space>
 nnoremap <leader>sA :<C-u>CtrlSF<Space>
 " search lines in current buffer
-noremap <leader>ss :<C-U><C-R>=printf("Leaderf line %s", "")<cr><cr>
-nnoremap <leader>sS :<C-u>BLines<cr>
+nnoremap <leader>ss :<C-u>BLines<cr>
 " search tags in current buffer
-noremap <leader>st :<C-U><C-R>=printf("Leaderf bufTag %s", "")<cr><cr>
-nnoremap <leader>sT :<C-u>Btags<cr>
+nnoremap <leader>st :<C-u>Btags<cr>
 " search commands
 nnoremap <leader>sc :<C-u>Commands<cr>
 " rg search
 nnoremap <leader>sg :<C-u>Rg<Space>
 " rg search cursor word
 nnoremap <leader>sw :<C-u>RgWord<cr>
-noremap <leader>sW :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<cr><cr>
 " highlight all occrances of cursor word
 nnoremap <silent> <leader>si :call InterestingWords('n')<cr>
 nnoremap <silent> <leader>sI :call UncolorAllWords()<cr>
@@ -611,16 +593,6 @@ nmap <Leader>oL :Limelight!<cr>
 
 
 " -------------------  Text  ---------------------
-" select text in parenthesis
-nnoremap <leader>ek vib
-" select text in square brackets
-nnoremap <leader>ef vi]
-" select text in curly brackets
-nnoremap <leader>eh vi}
-" select text in sigle quotations
-nnoremap <leader>ed vi'
-" select text in double quotations
-nnoremap <leader>ey vi"
 " interactive search and repalce in entire buffer
 nmap <leader>er :OverCommandLine<cr>%s///g<left><left><left>
 " interactive search and repalce in selected text
@@ -681,19 +653,21 @@ inoremap fd <Esc>
 " escape in visual mode
 vnoremap fd <Esc>
 " visual selection text including surrounding
-nnoremap vak va)
 nnoremap vaf va]
 nnoremap vah va}
 nnoremap vad va'
 nnoremap vay va"
+" visual select text within parenthesis
+nnoremap vif vi]
+nnoremap vih vi}
+nnoremap vid vi'
+nnoremap viy vi"
 " delete text including surrounding
-nnoremap dak da)
 nnoremap daf da]
 nnoremap dah da}
 nnoremap dad da'
 nnoremap day da"
 " delete surrounding
-nmap dsk ds)
 nmap dsf ds]
 nmap dsh ds}
 nmap dsd ds'
