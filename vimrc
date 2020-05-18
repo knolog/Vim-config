@@ -117,6 +117,7 @@ Plug 'jpalardy/vim-slime'
 Plug 'poliquin/stata-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'joshdick/onedark.vim'
+Plug 'ayu-theme/ayu-vim'
 call plug#end()
 
 
@@ -142,7 +143,12 @@ call plug#end()
 
 " colorscheme jellybeans
 
-colorscheme onedark
+" colorscheme onedark
+
+" let ayucolor="light"
+" let ayucolor="mirage"
+let ayucolor="dark"
+colorscheme ayu
 
 
 " -------------------  airline  ---------------------
@@ -259,6 +265,8 @@ let g:vaffle_force_delete = 1
 " -------------------  indentLine  ---------------------
 let g:indentLine_char = '┆'
 let g:indentLine_color_gui = '#b7b7b7'
+let g:indentLine_showFirstIndentLevel = 1
+" let g:indentLine_setColors = 0
 
 
 " -------------------  python-syntax  ---------------------
