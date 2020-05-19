@@ -55,6 +55,7 @@ set nowritebackup
 set noswapfile
 set wildignore+=*/.git/*,*/.DS_Store,*/tmp/*
 set wildmenu
+set lazyredraw
 syntax on
 syntax enable
 filetype on
@@ -73,7 +74,7 @@ Plug 'morhetz/gruvbox'
 Plug 'sillybun/vim-repl'
 Plug 'Yggdroot/indentLine'
 Plug 'tpope/vim-surround'
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 Plug 'romainl/vim-cool'
 Plug 'lfv89/vim-interestingwords'
 Plug 'vim-python/python-syntax'
@@ -118,6 +119,7 @@ Plug 'poliquin/stata-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'ayu-theme/ayu-vim'
+Plug 'Vigemus/iron.nvim'
 call plug#end()
 
 
@@ -160,14 +162,21 @@ colorscheme ayu
 
 let g:airline_theme='wombat'
 
-let g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 0
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
 let g:airline#extensions#branch#format = 2
+
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+let g:airline#extensions#tabline#fnamemod = ':t'
+" let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#tab_nr_type = 2
-au VimEnter * let [g:airline_section_a, g:airline_section_b] = [airline#section#create(['mode', 'branch', 'crypt', 'paste', 'keymap', 'capslock', 'xkblayout', 'iminsert']), airline#section#create(['hunks', 'spell'])]
+au VimEnter * let [g:airline_section_a, g:airline_section_b] = [airline#section#create(['mode', ' ', 'branch', 'crypt', 'paste', 'keymap', 'capslock', 'xkblayout', 'iminsert']), airline#section#create(['hunks', 'spell'])]
+
+call airline#parts#define_raw('linenr', '%l')
+call airline#parts#define_accent('linenr', 'bold')
+let g:airline_section_z = airline#section#create(['%3p%%  ', g:airline_symbols.linenr .' ', 'linenr', ':%c '])
+let g:airline_section_warning = ''
 
 
 " -------------------  coc  ---------------------
@@ -188,21 +197,32 @@ else
   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
+let g:coc_global_extensions = [
+            \'coc-python',
+            \'coc-pairs'
+            \]
+
+
+" -------------------  iron.vim  ---------------------
+let g:iron_map_defaults = 0
+
 
 " -------------------  vim-repl  ---------------------
-let g:repl_program = {
-            \   'python': ['ipython'],
-            \   'default': ['zsh'],
-            \   'r': ['R'],
-            \   'lua': ['lua'],
-            \   'vim': ['vim -e']
-            \   }
-let g:repl_cursor_down = 1
-let g:repl_python_automerge = 1
-let g:repl_ipython_version = '7'
-let g:repl_position = 3
-let g:repl_console_name = 'REPL'
-let g:sendtorepl_invoke_key = "<leader>rr"
+if !has('nvim')
+    let g:repl_program = {
+                \   'python': ['ipython'],
+                \   'default': ['zsh'],
+                \   'r': ['R'],
+                \   'lua': ['lua'],
+                \   'vim': ['vim -e']
+                \   }
+    let g:repl_cursor_down = 1
+    let g:repl_python_automerge = 1
+    let g:repl_ipython_version = '7'
+    let g:repl_position = 3
+    let g:repl_console_name = 'REPL'
+    let g:sendtorepl_invoke_key = "<leader>rr"
+endif
 
 
 " -------------------  vim-sneak  ---------------------
@@ -264,8 +284,8 @@ let g:vaffle_force_delete = 1
 
 " -------------------  indentLine  ---------------------
 let g:indentLine_char = '┆'
-let g:indentLine_color_gui = '#b7b7b7'
-let g:indentLine_showFirstIndentLevel = 1
+" let g:indentLine_color_gui = '#b7b7b7'
+" let g:indentLine_showFirstIndentLevel = 1
 " let g:indentLine_setColors = 0
 
 
@@ -347,6 +367,18 @@ let g:splitjoin_join_mapping = ''
 
 
 " -------------------  fzf  ---------------------
+let g:fzf_buffers_jump = 1
+let $FZF_DEFAULT_OPTS="--reverse "
+
+if has('nvim')
+    let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
+endif
+
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
+  set grepprg=rg\ --vimgrep
+endif
+
 command! -bang -nargs=? -complete=dir Files
     \ call fzf#vim#files('~/', {'options': ['--layout=reverse', '--info=inline', '--preview', '~/.vim/plugged/fzf.vim/bin/preview.sh {}']}, <bang>0)
 
@@ -365,6 +397,31 @@ command! -bang -nargs=* RgWord
   \ call fzf#vim#grep(
   \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(expand('<cword>') . ''), 1,
   \   fzf#vim#with_preview(), <bang>0)
+
+" floating fzf window with borders
+" Ref: https://github.com/Blacksuan19/init.nvim/blob/master/init.vim
+function! CreateCenteredFloatingWindow()
+    let width = min([&columns - 4, max([80, &columns - 30])])
+    let height = min([&lines - 4, max([20, &lines - 20])])
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let s:buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    call nvim_open_win(s:buf, v:true, opts)
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
+endfunction
 
 
 " -------------------  cursor  ---------------------
@@ -425,6 +482,31 @@ nnoremap <leader>qw :x<cr>
 nnoremap <leader>qf :q!<cr>
 
 
+" -------------------  fzf  ---------------------
+" list buffers
+nnoremap <leader>bb :<C-u>Buffers<cr>
+" search files
+nnoremap <leader>ff :<C-u>Files:<cr>
+" search files in current directory
+nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
+" search files in my git project
+nnoremap <leader>fp :<C-u>Project:<cr>
+" search most recent files
+nnoremap <leader>fr :<C-u>History<cr>
+" ag search
+nnoremap <leader>sa :<C-u>Ag<Space>
+" search lines in current buffer
+nnoremap <leader>ss :<C-u>BLines<cr>
+" search tags in current buffer
+nnoremap <leader>st :<C-u>Btags<cr>
+" search commands
+nnoremap <leader>sc :<C-u>Commands<cr>
+" rg search
+nnoremap <leader>sg :<C-u>Rg<Space>
+" rg search cursor word
+nnoremap <leader>sw :<C-u>RgWord<cr>
+
+
 " -------------------  Buffers  ---------------------
 " open {file}
 nnoremap <leader>be :e<Space>
@@ -438,8 +520,6 @@ nnoremap <leader>bD :bdelete!<cr>
 nnoremap <leader>bn :bn<cr>
 " previous buffer
 nnoremap <leader>bp :bp<cr>
-" list buffers
-nnoremap <leader>bb :<C-u>Buffers<cr>
 " source buffer
 nnoremap <leader>bs :source %<cr>
 
@@ -463,8 +543,6 @@ nnoremap <leader>tp gT
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
 nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>tn <Plug>AirlineSelectPrevTab
-nmap <leader>tp <Plug>AirlineSelectNextTab
 
 
 " -------------------  Files  ---------------------
@@ -474,14 +552,6 @@ nnoremap <leader>fs :w<cr>
 inoremap <leader>fs <Esc>:w<cr>
 " open .vimrc
 nnoremap <leader>fd :e ~/.vimrc<cr>
-" search files
-nnoremap <leader>fF :<C-u>Files:<cr>
-" search files in current directory
-nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
-" search files in my git project
-nnoremap <leader>fp :<C-u>Project:<cr>
-" search most recent files
-nnoremap <leader>fr :<C-u>History<cr>
 " copy file name only
 nnoremap <leader>fY :let @*=expand("%")<cr>
 " copy file name with full path
@@ -501,6 +571,8 @@ nnoremap <leader>ad :PlugClean<cr>
 noremap <Space> <Nop>
 noremap j gj
 noremap k gk
+noremap <Enter> o<ESC>
+noremap <S-Enter> O<ESC>
 " gof: reveal current file in finder (default mapping of gtfo.vim)
 
 
@@ -529,34 +601,40 @@ nnoremap <leader>wd <C-w>q
 nnoremap <leader>wH <C-w>H
 " move window to the right
 nnoremap <leader>wL <C-w>L
-" Convert to normal mode in terminal buffer
-tnoremap <C-o> <C-w>N
-" focus on left window from terminal buffer
-tnoremap <C-h> <C-w>h
-" focus on right window from terminal buffer
-tnoremap <C-l> <C-w>l
-" focus on bottom window from terminal buffer
-tnoremap <C-j> <C-w>j
-" focus on top window from terminal buffer
-tnoremap <C-k> <C-w>k
+
+if !has('nvim')
+    " Convert to normal mode in terminal buffer
+    tnoremap <C-o> <C-w>N
+    " focus on left window from terminal buffer
+    tnoremap <C-h> <C-w>h
+    " focus on right window from terminal buffer
+    tnoremap <C-l> <C-w>l
+    " focus on bottom window from terminal buffer
+    tnoremap <C-j> <C-w>j
+    " focus on top window from terminal buffer
+    tnoremap <C-k> <C-w>k
+endif
+
+if has('nvim')
+    " Convert to normal mode in terminal buffer
+    tnoremap <C-o> <C-\><C-n>
+    " focus on left window from terminal buffer
+    tnoremap <C-h> <c-\><c-n><c-w>h
+    " focus on right window from terminal buffer
+    tnoremap <C-l> <c-\><c-n><c-w>l
+    " focus on bottom window from terminal buffer
+    tnoremap <C-j> <c-\><c-n><c-w>j
+    " focus on top window from terminal buffer
+    tnoremap <C-k> <c-\><c-n><c-w>k
+endif
+
 " split a mini window
 vnoremap <leader>wm :VSSplit<cr>
 
 
 " -------------------  Search  ---------------------
 " ag search
-nnoremap <leader>sa :<C-u>Ag<Space>
 nnoremap <leader>sA :<C-u>CtrlSF<Space>
-" search lines in current buffer
-nnoremap <leader>ss :<C-u>BLines<cr>
-" search tags in current buffer
-nnoremap <leader>st :<C-u>Btags<cr>
-" search commands
-nnoremap <leader>sc :<C-u>Commands<cr>
-" rg search
-nnoremap <leader>sg :<C-u>Rg<Space>
-" rg search cursor word
-nnoremap <leader>sw :<C-u>RgWord<cr>
 " highlight all occrances of cursor word
 nnoremap <silent> <leader>si :call InterestingWords('n')<cr>
 nnoremap <silent> <leader>sI :call UncolorAllWords()<cr>
@@ -675,6 +753,21 @@ nnoremap daf da]
 nnoremap dah da}
 nnoremap dad da'
 nnoremap day da"
+" delete text without surrounding
+nnoremap dif di]
+nnoremap dih di}
+nnoremap did di'
+nnoremap diy di"
+" change text including surrounding
+nnoremap caf ca]
+nnoremap cah ca}
+nnoremap cad ca'
+nnoremap cay ca"
+" change text within parenthesis
+nnoremap cif ci]
+nnoremap cih ci}
+nnoremap cid ci'
+nnoremap ciy ci"
 " delete surrounding
 nmap dsf ds]
 nmap dsh ds}
@@ -706,15 +799,27 @@ nnoremap <leader>gs :Gstatus<cr>
 
 
 " -------------------  Python  ---------------------
-augroup python_key_map
-    autocmd! python_key_map
-    " toggle ipython
-    autocmd Filetype python nnoremap <buffer> <leader>rt :REPLToggle<cr>
-    " hide ipython
-    autocmd Filetype python nnoremap <buffer> <leader>rh :REPLHide<cr>
-    " unhide ipython
-    autocmd Filetype python nnoremap <buffer> <leader>ru :REPLUnhide<cr><C-w>q
-augroup end
+if !has('nvim')
+    augroup python_key_map
+        autocmd! python_key_map
+        " toggle ipython
+        autocmd Filetype python nnoremap <buffer> <leader>rt :REPLToggle<cr>
+        " hide ipython
+        autocmd Filetype python nnoremap <buffer> <leader>rh :REPLHide<cr>
+        " unhide ipython
+        autocmd Filetype python nnoremap <buffer> <leader>ru :REPLUnhide<cr><C-w>q
+    augroup end
+endif
+
+if has('nvim')
+    nnoremap <leader>rt :IronRepl<cr><Esc>
+    nnoremap <leader>rs :IronRestart<cr><Esc>
+    vmap <leader>rr <Plug>(iron-visual-send)
+    nmap <leader>rr <Plug>(iron-send-line)
+    nmap <leader>ri <plug>(iron-interrupt)
+    nmap <leader>rq <Plug>(iron-exit)
+    nmap <leader>rc <Plug>(iron-clear)
+endif
 
 
 " -------------------  Markdown  ---------------------
@@ -778,4 +883,3 @@ tnoremap jn -
 tnoremap sj ^
 tnoremap lk $
 tnoremap dh =
-
