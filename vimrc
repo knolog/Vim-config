@@ -74,7 +74,6 @@ Plug 'morhetz/gruvbox'
 Plug 'sillybun/vim-repl'
 Plug 'Yggdroot/indentLine'
 Plug 'tpope/vim-surround'
-" Plug 'jiangmiao/auto-pairs'
 Plug 'romainl/vim-cool'
 Plug 'lfv89/vim-interestingwords'
 Plug 'vim-python/python-syntax'
@@ -120,6 +119,11 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'Vigemus/iron.nvim'
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'ncm2/float-preview.nvim'
+Plug 'machakann/vim-highlightedyank'
+Plug 'itchyny/calendar.vim'
+Plug 'MaxMEllon/vim-shiny'
 call plug#end()
 
 
@@ -162,6 +166,7 @@ colorscheme ayu
 
 let g:airline_theme='wombat'
 
+
 let g:airline_powerline_fonts = 0
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#hunks#enabled = 1
@@ -170,7 +175,7 @@ let g:airline#extensions#branch#format = 2
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 " let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
-let g:airline#extensions#tabline#tab_nr_type = 2
+" let g:airline#extensions#tabline#tab_nr_type = 2
 au VimEnter * let [g:airline_section_a, g:airline_section_b] = [airline#section#create(['mode', ' ', 'branch', 'crypt', 'paste', 'keymap', 'capslock', 'xkblayout', 'iminsert']), airline#section#create(['hunks', 'spell'])]
 
 call airline#parts#define_raw('linenr', '%l')
@@ -366,6 +371,28 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 
 
+" -------------------  float-preview  ---------------------
+let g:float_preview#docked = 0
+
+
+" -------------------  calendar  ---------------------
+let g:calendar_frame = 'default'
+
+
+" -------------------  highlightedyank  ---------------------
+let g:highlightedyank_highlight_duration = 500
+highlight link HighlightedyankRegion Visual
+
+
+" -------------------  vim-shiny  ---------------------
+let g:vim_shiny_window_change = 1
+nmap p <Plug>(shiny-p)
+
+
+" -------------------  vim-clap  ---------------------
+let g:clap_layout = { 'width': '80%', 'height': '50%', 'row': '20%', 'col': '12%' }
+
+
 " -------------------  fzf  ---------------------
 let g:fzf_buffers_jump = 1
 let $FZF_DEFAULT_OPTS="--reverse "
@@ -482,29 +509,61 @@ nnoremap <leader>qw :x<cr>
 nnoremap <leader>qf :q!<cr>
 
 
-" -------------------  fzf  ---------------------
-" list buffers
-nnoremap <leader>bb :<C-u>Buffers<cr>
-" search files
-nnoremap <leader>ff :<C-u>Files:<cr>
-" search files in current directory
-nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
-" search files in my git project
-nnoremap <leader>fp :<C-u>Project:<cr>
-" search most recent files
-nnoremap <leader>fr :<C-u>History<cr>
-" ag search
-nnoremap <leader>sa :<C-u>Ag<Space>
-" search lines in current buffer
-nnoremap <leader>ss :<C-u>BLines<cr>
-" search tags in current buffer
-nnoremap <leader>st :<C-u>Btags<cr>
-" search commands
-nnoremap <leader>sc :<C-u>Commands<cr>
-" rg search
-nnoremap <leader>sg :<C-u>Rg<Space>
-" rg search cursor word
-nnoremap <leader>sw :<C-u>RgWord<cr>
+" -------------------  vim-clap and fzf  ---------------------
+if has('nvim')
+    " list buffers
+    nnoremap <leader>bb :<C-u>Clap buffers<cr>
+    " search files
+    nnoremap <leader>ff :<C-u>Clap filer<cr>
+    " search files
+    nnoremap <leader>fF :<C-u>Clap files<cr>
+    " search files in current directory
+    nnoremap <leader>f. :<C-u>Clap files .<cr>
+    " search files in my git project
+    nnoremap <leader>fp :<C-u>Clap files ~/Git<cr>
+    " search most recent files
+    nnoremap <leader>fr :<C-u>Clap history<cr>
+    " ag search
+    nnoremap <leader>sa :<C-u>Ag<Space>
+    " search lines in current buffer
+    nnoremap <leader>ss :<C-u>Clap blines<cr>
+    " search tags in current buffer
+    nnoremap <leader>st :<C-u>Clap tags<cr>
+    " search commands
+    nnoremap <leader>sc :<C-u>Clap command<cr>
+    " rg search
+    nnoremap <leader>sg :<C-u>Clap grep<Space>
+    " rg search cursor word
+    nnoremap <leader>sw :<C-u>Clap grep ++query=<cword><cr>
+    nnoremap <leader>sW :<C-u>RgWord<cr>
+    " rg search selection
+    vnoremap <leader>sv :<C-u>Clap grep ++query=@visual<cr>
+endif
+
+if has('vim')
+    " list buffers
+    nnoremap <leader>bb :<C-u>Buffers<cr>
+    " search files
+    nnoremap <leader>ff :<C-u>Files:<cr>
+    " search files in current directory
+    nnoremap <leader>f. :<C-u>CurrentDirectory:<cr>
+    " search files in my git project
+    nnoremap <leader>fp :<C-u>Project:<cr>
+    " search most recent files
+    nnoremap <leader>fr :<C-u>History<cr>
+    " ag search
+    nnoremap <leader>sa :<C-u>Ag<Space>
+    " search lines in current buffer
+    nnoremap <leader>ss :<C-u>BLines<cr>
+    " search tags in current buffer
+    nnoremap <leader>st :<C-u>Btags<cr>
+    " search commands
+    nnoremap <leader>sc :<C-u>Commands<cr>
+    " rg search
+    nnoremap <leader>sg :<C-u>Rg<Space>
+    " rg search cursor word
+    nnoremap <leader>sw :<C-u>RgWord<cr>
+endif
 
 
 " -------------------  Buffers  ---------------------
@@ -883,3 +942,4 @@ tnoremap jn -
 tnoremap sj ^
 tnoremap lk $
 tnoremap dh =
+
