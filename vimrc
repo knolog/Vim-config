@@ -904,7 +904,7 @@ inoremap ji +
 inoremap cj *
 inoremap xy <
 inoremap dy >
-inoremap lk $
+inoremap mj $
 inoremap yb £
 inoremap qa @
 inoremap yw ?
@@ -929,7 +929,7 @@ cnoremap gt !
 cnoremap jh #
 cnoremap jn -
 cnoremap sj ^
-cnoremap lk $
+cnoremap mj $
 cnoremap dh =
 tnoremap kk ()
 tnoremap fk []
@@ -944,6 +944,6 @@ tnoremap gt !
 tnoremap jh #
 tnoremap jn -
 tnoremap sj ^
-tnoremap lk $
+tnoremap mj $
 tnoremap dh =
 
