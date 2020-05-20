@@ -31,7 +31,6 @@ set encoding=utf-8
 set fileencoding=utf-8
 set number
 set relativenumber
-set colorcolumn=80
 set laststatus=2
 set showtabline=2
 set timeoutlen=1000
@@ -380,13 +379,13 @@ let g:calendar_frame = 'default'
 
 
 " -------------------  highlightedyank  ---------------------
-let g:highlightedyank_highlight_duration = 500
-highlight link HighlightedyankRegion Visual
+let g:highlightedyank_highlight_duration = 300
+highlight HighlightedyankRegion gui=bold guibg=#005faf
 
 
 " -------------------  vim-shiny  ---------------------
 let g:vim_shiny_window_change = 1
-nmap p <Plug>(shiny-p)
+highlight default WindowChange guibg=#005faf
 
 
 " -------------------  vim-clap  ---------------------
@@ -473,7 +472,12 @@ command! BufferOnly execute '%bdelete|edit #|normal `"'
 
 
 " python
-autocmd BufRead,BufNewFile *.py setlocal textwidth=80
+autocmd BufRead,BufNewFile *.py setlocal textwidth=80 colorcolumn=80
+
+
+" auto pairs
+autocmd FileType stata let b:coc_pairs_disabled = ['`']
+autocmd FileType markdown let b:coc_pairs_disabled = ['`']
 
 
 " automatic table mode
