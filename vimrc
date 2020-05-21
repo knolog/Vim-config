@@ -123,6 +123,7 @@ Plug 'ncm2/float-preview.nvim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'itchyny/calendar.vim'
 Plug 'MaxMEllon/vim-shiny'
+Plug 'vifm/vifm.vim '
 call plug#end()
 
 
@@ -627,13 +628,17 @@ nnoremap <leader>ai :PlugInstall<cr>
 " Update plugins
 nnoremap <leader>au :PlugUpdate<cr>
 " Clean plugins
-nnoremap <leader>ad :PlugClean<cr>
+nnoremap <leader>ac :PlugClean<cr>
+" Insert date
+nnoremap <silent> <leader>ad "=strftime("%Y-%m-%d")"<cr>p
+nnoremap <silent> <leader>at "=strftime("%T")"<cr>p
+nnoremap <silent> <leader>aD "=strftime("%a %d %b %Y")"<cr>p
 
 
 " -------------------  Others  ---------------------
 noremap <Space> <Nop>
-noremap j gj
-noremap k gk
+nnoremap j gj
+nnoremap k gk
 noremap <Enter> o<ESC>
 noremap <S-Enter> O<ESC>
 " gof: reveal current file in finder (default mapping of gtfo.vim)
