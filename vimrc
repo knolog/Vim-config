@@ -10,6 +10,7 @@ set t_Co=256
 set t_ut=
 set background=dark
 set nocompatible
+set cmdheight=1
 set showmatch
 set modeline
 set ruler
@@ -55,6 +56,7 @@ set noswapfile
 set wildignore+=*/.git/*,*/.DS_Store,*/tmp/*
 set wildmenu
 set lazyredraw
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 syntax on
 syntax enable
 filetype on
@@ -95,7 +97,6 @@ Plug 'osyo-manga/vim-over'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'voldikss/vim-browser-search'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
 Plug 'junegunn/fzf'
@@ -103,14 +104,11 @@ Plug 'junegunn/fzf.vim'
 Plug 'haya14busa/incsearch.vim'
 Plug 'danilo-augusto/vim-afterglow'
 Plug 'wellle/visual-split.vim'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'simnalamburt/vim-mundo'
-Plug 'KeitaNakamura/neodark.vim'
 Plug 'justinmk/vim-gtfo'
 Plug 'AndrewRadev/sideways.vim'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'dyng/ctrlsf.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'poliquin/stata-vim'
@@ -123,7 +121,12 @@ Plug 'ncm2/float-preview.nvim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'itchyny/calendar.vim'
 Plug 'MaxMEllon/vim-shiny'
-Plug 'vifm/vifm.vim '
+Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
+Plug 'wincent/terminus'
+Plug 'rhysd/clever-f.vim'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+Plug 'chrisbra/NrrwRgn'
+Plug 'brooth/far.vim'
 call plug#end()
 
 
@@ -137,35 +140,29 @@ call plug#end()
 " let g:gruvbox_invert_selection=0
 " colorscheme gruvbox
 
-" colorscheme hybrid_reverse
-
 " let g:afterglow_blackout=1
 " let g:afterglow_inherit_background=1
 " colorscheme afterglow
 
-" let g:neodark#use_256color = 1
-" let g:neodark#terminal_transparent = 1
-" colorscheme neodark
-
 " colorscheme jellybeans
 
-" colorscheme onedark
+colorscheme onedark
 
 " let ayucolor="light"
 " let ayucolor="mirage"
-let ayucolor="dark"
-colorscheme ayu
+" let ayucolor="dark"
+" colorscheme ayu
+
 
 
 " -------------------  airline  ---------------------
-" let g:airline_theme='papercolor'
 " let g:airline_theme='tomorrow'
 " let g:airline_theme='afterglow'
-" let g:airline_theme='neodark'
 " let g:airline_theme='bubblegum'
+" let g:airline_theme='wombat'
+" let g:airline_theme='term'
 
-let g:airline_theme='wombat'
-
+let g:airline_theme='tomorrow'
 
 let g:airline_powerline_fonts = 0
 let g:airline#extensions#branch#enabled = 1
@@ -174,8 +171,24 @@ let g:airline#extensions#branch#format = 2
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
+
 " let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 " let g:airline#extensions#tabline#tab_nr_type = 2
+
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#buffer_idx_format = {
+    \ '0': '0 ',
+    \ '1': '1 ',
+    \ '2': '2 ',
+    \ '3': '3 ',
+    \ '4': '4 ',
+    \ '5': '5 ',
+    \ '6': '6 ',
+    \ '7': '7 ',
+    \ '8': '8 ',
+    \ '9': '9 '
+    \}
+
 au VimEnter * let [g:airline_section_a, g:airline_section_b] = [airline#section#create(['mode', ' ', 'branch', 'crypt', 'paste', 'keymap', 'capslock', 'xkblayout', 'iminsert']), airline#section#create(['hunks', 'spell'])]
 
 call airline#parts#define_raw('linenr', '%l')
@@ -260,7 +273,6 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 let g:gitgutter_map_keys = 0
 let g:gitgutter_highlight_lines = 1
 let g:gitgutter_highlight_linenrs = 1
-
 
 " ------------------------  vaffle  ---------------------------
     "  ----  --------  --------------------------------
@@ -379,6 +391,12 @@ let g:float_preview#docked = 0
 let g:calendar_frame = 'default'
 
 
+" -------------------  clever-f  ---------------------
+let g:clever_f_across_no_line = 1
+map ; <Plug>(clever-f-repeat-forward)
+map , <Plug>(clever-f-repeat-back)
+
+
 " -------------------  highlightedyank  ---------------------
 let g:highlightedyank_highlight_duration = 300
 highlight HighlightedyankRegion gui=bold guibg=#005faf
@@ -389,17 +407,49 @@ let g:vim_shiny_window_change = 1
 highlight default WindowChange guibg=#005faf
 
 
+" -------------------  far  ---------------------
+nnoremap <silent> <leader>sf :Farf<cr>
+vnoremap <silent> <leader>sf :Farf<cr>
+nnoremap <silent> <leader>sh :Farr<cr>
+vnoremap <silent> <leader>sh :Farr<cr>
+let g:far#window_layout = 'bottom'
+let g:far#window_height = 30
+let g:far#auto_preview_on_start = 0
+let g:far#debug = 1
+let g:far#window_width = 60
+let g:far#auto_preview = 1
+let g:far#preview_window_height = 7
+let g:far#auto_write_replaced_buffers = 0
+let g:far#check_window_resize_period = 0
+let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.py', '**/*.vim', '**/*.txt']
+let g:far#prompt_mapping = {
+    \ 'quit'           : { 'key' : '<esc>', 'prompt' : 'Esc' },
+    \ 'regex'          : { 'key' : '<C-r>', 'prompt' : '^r'  },
+    \ 'case_sensitive' : { 'key' : '<C-c>', 'prompt' : '^c'  },
+    \ 'word'           : { 'key' : '<C-w>', 'prompt' : "^w"  },
+    \ 'substitute'     : { 'key' : '<C-h>', 'prompt' : '^h'  },
+    \ }
+
+
 " -------------------  vim-clap  ---------------------
 let g:clap_layout = { 'width': '80%', 'height': '50%', 'row': '20%', 'col': '12%' }
+
+
+" -------------------  vim-visual-multi  ---------------------
+let g:VM_leader = 'mm'
+
+
+" -------------------  rnvimr  ---------------------
+let g:rnvimr_pick_enable = 1
 
 
 " -------------------  fzf  ---------------------
 let g:fzf_buffers_jump = 1
 let $FZF_DEFAULT_OPTS="--reverse "
 
-if has('nvim')
-    let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
-endif
+" if has('nvim')
+"     let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
+" endif
 
 if executable('rg')
   let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
@@ -453,9 +503,9 @@ endfunction
 
 " -------------------  cursor  ---------------------
 " Change cursor shape based on mode
-let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
-let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+" let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+" let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+" let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
 
 
 
@@ -521,28 +571,25 @@ if has('nvim')
     " search files
     nnoremap <leader>ff :<C-u>Clap filer<cr>
     " search files
-    nnoremap <leader>fF :<C-u>Clap files<cr>
+    nnoremap <leader>fF :<C-u>Files:<cr>
     " search files in current directory
-    nnoremap <leader>f. :<C-u>Clap files .<cr>
+    nnoremap <leader>f. :<C-u>Clap filer .<cr>
     " search files in my git project
-    nnoremap <leader>fp :<C-u>Clap files ~/Git<cr>
+    nnoremap <leader>fp :<C-u>Clap filer ~/Git<cr>
     " search most recent files
     nnoremap <leader>fr :<C-u>Clap history<cr>
     " ag search
     nnoremap <leader>sa :<C-u>Ag<Space>
     " search lines in current buffer
-    nnoremap <leader>ss :<C-u>Clap blines<cr>
+    nnoremap <leader>ss :<C-u>BLines<cr>
     " search tags in current buffer
-    nnoremap <leader>st :<C-u>Clap tags<cr>
+    nnoremap <leader>st :<C-u>BTags<cr>
     " search commands
     nnoremap <leader>sc :<C-u>Clap command<cr>
     " rg search
-    nnoremap <leader>sg :<C-u>Clap grep<Space>
+    nnoremap <leader>sg :<C-u>Rg<Space>
     " rg search cursor word
-    nnoremap <leader>sw :<C-u>Clap grep ++query=<cword><cr>
     nnoremap <leader>sW :<C-u>RgWord<cr>
-    " rg search selection
-    vnoremap <leader>sv :<C-u>Clap grep ++query=@visual<cr>
 endif
 
 if has('vim')
@@ -561,7 +608,7 @@ if has('vim')
     " search lines in current buffer
     nnoremap <leader>ss :<C-u>BLines<cr>
     " search tags in current buffer
-    nnoremap <leader>st :<C-u>Btags<cr>
+    nnoremap <leader>st :<C-u>BTags<cr>
     " search commands
     nnoremap <leader>sc :<C-u>Commands<cr>
     " rg search
@@ -642,6 +689,7 @@ nnoremap k gk
 noremap <Enter> o<ESC>
 noremap <S-Enter> O<ESC>
 " gof: reveal current file in finder (default mapping of gtfo.vim)
+" <leader>nr: narrow down region
 
 
 " -------------------  Windows  ---------------------
@@ -701,8 +749,6 @@ vnoremap <leader>wm :VSSplit<cr>
 
 
 " -------------------  Search  ---------------------
-" ag search
-nnoremap <leader>sA :<C-u>CtrlSF<Space>
 " highlight all occrances of cursor word
 nnoremap <silent> <leader>si :call InterestingWords('n')<cr>
 nnoremap <silent> <leader>sI :call UncolorAllWords()<cr>
@@ -724,7 +770,7 @@ map <leader>jw <Plug>(easymotion-bd-w)
 " jump lines
 map <leader>jl <Plug>(easymotion-bd-jk)
 " jump between brackets
-nnoremap mm %
+nnoremap mp %
 
 
 " -------------------  Toggle  ---------------------
@@ -739,11 +785,13 @@ nnoremap <leader>oc :OverCommandLine<cr>
 " toggle startify
 nnoremap <leader>oo :Startify<cr>
 " toggle undo tree
-nnoremap <leader>ou :MundoToggle<CR>
+nnoremap <leader>ou :MundoToggle<cr>
 " toggle on/off limelight
 nmap <Leader>ol :Limelight<cr>
 xmap <Leader>ol :Limelight<cr>
 nmap <Leader>oL :Limelight!<cr>
+" toggle ranger
+nnoremap <silent> <leader>or :RnvimrToggle<cr>
 
 
 " -------------------  Text  ---------------------
