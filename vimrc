@@ -113,20 +113,18 @@ Plug 'junegunn/limelight.vim'
 Plug 'jpalardy/vim-slime'
 Plug 'poliquin/stata-vim'
 Plug 'nanotech/jellybeans.vim'
-Plug 'joshdick/onedark.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'Vigemus/iron.nvim'
 Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
-Plug 'ncm2/float-preview.nvim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'itchyny/calendar.vim'
-Plug 'MaxMEllon/vim-shiny'
 Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
 Plug 'wincent/terminus'
 Plug 'rhysd/clever-f.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'chrisbra/NrrwRgn'
 Plug 'brooth/far.vim'
+Plug 't9md/vim-choosewin'
 call plug#end()
 
 
@@ -146,13 +144,10 @@ call plug#end()
 
 " colorscheme jellybeans
 
-colorscheme onedark
-
 " let ayucolor="light"
-" let ayucolor="mirage"
+let ayucolor="mirage"
 " let ayucolor="dark"
-" colorscheme ayu
-
+colorscheme ayu
 
 
 " -------------------  airline  ---------------------
@@ -162,7 +157,7 @@ colorscheme onedark
 " let g:airline_theme='wombat'
 " let g:airline_theme='term'
 
-let g:airline_theme='tomorrow'
+let g:airline_theme='wombat'
 
 let g:airline_powerline_fonts = 0
 let g:airline#extensions#branch#enabled = 1
@@ -177,16 +172,15 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#tabline#buffer_idx_format = {
-    \ '0': '0 ',
-    \ '1': '1 ',
-    \ '2': '2 ',
-    \ '3': '3 ',
-    \ '4': '4 ',
-    \ '5': '5 ',
-    \ '6': '6 ',
-    \ '7': '7 ',
-    \ '8': '8 ',
-    \ '9': '9 '
+    \ '1': '❶ ',
+    \ '2': '❷ ',
+    \ '3': '❸ ',
+    \ '4': '❹ ',
+    \ '5': '❺ ',
+    \ '6': '❻ ',
+    \ '7': '❼ ',
+    \ '8': '❽ ',
+    \ '9': '❾ '
     \}
 
 au VimEnter * let [g:airline_section_a, g:airline_section_b] = [airline#section#create(['mode', ' ', 'branch', 'crypt', 'paste', 'keymap', 'capslock', 'xkblayout', 'iminsert']), airline#section#create(['hunks', 'spell'])]
@@ -266,7 +260,12 @@ let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_no_default_key_mappings = 1
 let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_conceal = 0
-autocmd BufRead,BufNewFile *.md setlocal spell
+
+
+" -------------------  markdown-preview  ---------------------
+let g:mkdp_auto_start = 0
+let g:mkdp_auto_close = 1
+let g:mkdp_refresh_slow = 0
 
 
 " -------------------  vim-gitgutter  ---------------------
@@ -308,6 +307,7 @@ let g:indentLine_char = '┆'
 
 " -------------------  python-syntax  ---------------------
 let g:python_highlight_all = 1
+let python_highlight_space_errors = 0
 
 
 " -------------------  vim-browser-search  ---------------------
@@ -383,10 +383,6 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 
 
-" -------------------  float-preview  ---------------------
-let g:float_preview#docked = 0
-
-
 " -------------------  calendar  ---------------------
 let g:calendar_frame = 'default'
 
@@ -400,11 +396,6 @@ map , <Plug>(clever-f-repeat-back)
 " -------------------  highlightedyank  ---------------------
 let g:highlightedyank_highlight_duration = 300
 highlight HighlightedyankRegion gui=bold guibg=#005faf
-
-
-" -------------------  vim-shiny  ---------------------
-let g:vim_shiny_window_change = 1
-highlight default WindowChange guibg=#005faf
 
 
 " -------------------  far  ---------------------
@@ -443,9 +434,29 @@ let g:VM_leader = 'mm'
 let g:rnvimr_pick_enable = 1
 
 
+" -------------------  choosewin  ---------------------
+" Ref: https://github.com/hardcoreplayers/ThinkVim/blob/develop/modules/module-choosewin.vim
+let g:choosewin_label = 'SDFJKLZXCV'
+let g:choosewin_overlay_enable = 1
+let g:choosewin_statusline_replace = 1
+let g:choosewin_overlay_clear_multibyte = 0
+let g:choosewin_blink_on_land = 0
+let g:choosewin_color_label = {
+	\ 'cterm': [ 236, 2 ], 'gui': [ '#555555', '#000000' ] }
+let g:choosewin_color_label_current = {
+	\ 'cterm': [ 234, 220 ], 'gui': [ '#333333', '#000000' ] }
+let g:choosewin_color_other = {
+	\ 'cterm': [ 235, 235 ], 'gui': [ '#333333' ] }
+let g:choosewin_color_overlay = {
+	\ 'cterm': [ 2, 10 ], 'gui': [ '#88A2A4' ] }
+let g:choosewin_color_overlay_current = {
+	\ 'cterm': [ 72, 64 ], 'gui': [ '#7BB292' ] }
+nmap \ <Plug>(choosewin)
+
+
 " -------------------  fzf  ---------------------
 let g:fzf_buffers_jump = 1
-let $FZF_DEFAULT_OPTS="--reverse "
+let $FZF_DEFAULT_OPTS="--reverse"
 
 " if has('nvim')
 "     let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
@@ -498,6 +509,13 @@ function! CreateCenteredFloatingWindow()
     let opts.width -= 4
     call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
     au BufWipeout <buffer> exe 'bw '.s:buf
+    setlocal
+        \ buftype=nofile
+        \ nobuflisted
+        \ bufhidden=hide
+        \ nonumber
+        \ norelativenumber
+        \ signcolumn=no
 endfunction
 
 
@@ -523,7 +541,11 @@ command! BufferOnly execute '%bdelete|edit #|normal `"'
 
 
 " python
-autocmd BufRead,BufNewFile *.py setlocal textwidth=80 colorcolumn=80
+autocmd BufRead,BufNewFile *.py setlocal textwidth=80 colorcolumn=80 noexpandtab
+
+
+" markdown
+autocmd BufRead,BufNewFile *.md setlocal spell
 
 
 " auto pairs
@@ -578,6 +600,7 @@ if has('nvim')
     nnoremap <leader>fp :<C-u>Clap filer ~/Git<cr>
     " search most recent files
     nnoremap <leader>fr :<C-u>Clap history<cr>
+    nnoremap <leader>fR :<C-u>History<cr>
     " ag search
     nnoremap <leader>sa :<C-u>Ag<Space>
     " search lines in current buffer
@@ -654,6 +677,8 @@ nnoremap <leader>tp gT
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
 nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
 
 
 " -------------------  Files  ---------------------
@@ -683,20 +708,18 @@ nnoremap <silent> <leader>aD "=strftime("%a %d %b %Y")"<cr>p
 
 
 " -------------------  Others  ---------------------
-noremap <Space> <Nop>
 nnoremap j gj
 nnoremap k gk
 noremap <Enter> o<ESC>
 noremap <S-Enter> O<ESC>
 " gof: reveal current file in finder (default mapping of gtfo.vim)
-" <leader>nr: narrow down region
 
 
 " -------------------  Windows  ---------------------
 " open {file} from homoe directory and split window vertically
-nnoremap <leader>wv :Vex ~/<cr><C-w>x
+nnoremap <leader>wv :vs<cr><C-w>l
 " open {file} from homoe directory and split window horizontally
-nnoremap <leader>ws :Sex ~/<cr><C-w>x
+nnoremap <leader>ws :sp<cr><C-w>j
 " open an empty buffer and split window vertically
 nnoremap <leader>wV :vnew<cr><C-w>x<C-w>l
 " open an empty buffer and split window horizontally
@@ -718,7 +741,7 @@ nnoremap <leader>wH <C-w>H
 " move window to the right
 nnoremap <leader>wL <C-w>L
 
-if !has('nvim')
+if has('vim')
     " Convert to normal mode in terminal buffer
     tnoremap <C-o> <C-w>N
     " focus on left window from terminal buffer
@@ -746,6 +769,8 @@ endif
 
 " split a mini window
 vnoremap <leader>wm :VSSplit<cr>
+" narrow region
+vmap <leader>wn <Plug>NrrwrgnDo
 
 
 " -------------------  Search  ---------------------
@@ -935,6 +960,13 @@ if has('nvim')
     nmap <leader>ri <plug>(iron-interrupt)
     nmap <leader>rq <Plug>(iron-exit)
     nmap <leader>rc <Plug>(iron-clear)
+    autocmd Filetype python nnoremap ,t :IronRepl<cr><Esc>
+    autocmd Filetype python nnoremap ,s :IronRestart<cr><Esc>
+    autocmd Filetype python vmap ,r <Plug>(iron-visual-send)
+    autocmd Filetype python nmap ,r <Plug>(iron-send-line)
+    autocmd Filetype python nmap ,i <plug>(iron-interrupt)
+    autocmd Filetype python nmap ,q <Plug>(iron-exit)
+    autocmd Filetype python nmap ,c <Plug>(iron-clear)
 endif
 
 
@@ -944,6 +976,15 @@ nmap <leader>mp <Plug>MarkdownPreview
 " stop preview markdown
 nmap <leader>ms <Plug>MarkdownPreviewStop
 nmap <leader>mt <Plug>MarkdownPreviewToggle
+
+autocmd Filetype markdown inoremap ,b ****<Esc>hi
+autocmd Filetype markdown inoremap ,i **<Esc>i
+autocmd Filetype markdown inoremap ,s ~~~~<Esc>F*hi
+autocmd Filetype markdown inoremap ,c ``<Esc>i
+autocmd Filetype markdown inoremap ,k ```<cr><cr>```<Esc>ki
+autocmd Filetype markdown inoremap ,h ====<Esc>hi
+autocmd Filetype markdown inoremap ,l []()<Esc>hhi
+autocmd Filetype markdown inoremap ,p ![]()<Esc>hhi
 
 
 " -------------------  Typing  ---------------------
@@ -984,19 +1025,19 @@ cnoremap jn -
 cnoremap sj ^
 cnoremap mj $
 cnoremap dh =
-tnoremap kk ()
-tnoremap fk []
-tnoremap hk {}
-tnoremap jk <>
-tnoremap dg _
-tnoremap ji +
-tnoremap bf %
-tnoremap aa &
-tnoremap bw ~
-tnoremap gt !
-tnoremap jh #
-tnoremap jn -
-tnoremap sj ^
-tnoremap mj $
-tnoremap dh =
-
+" tnoremap kk ()
+" tnoremap fk []
+" tnoremap hk {}
+" tnoremap jk <>
+" tnoremap dg _
+" tnoremap ji +
+" tnoremap bf %
+" tnoremap aa &
+" tnoremap bw ~
+" tnoremap gt !
+" tnoremap jh #
+" tnoremap jn -
+" tnoremap sj ^
+" tnoremap mj $
+" tnoremap dh =
+"
