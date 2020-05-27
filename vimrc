@@ -56,6 +56,8 @@ set noswapfile
 set wildignore+=*/.git/*,*/.DS_Store,*/tmp/*
 set wildmenu
 set lazyredraw
+set completeopt=noinsert,menuone,noselect
+set shortmess+=c
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 syntax on
 syntax enable
@@ -96,9 +98,9 @@ Plug 'Shougo/neomru.vim'
 Plug 'osyo-manga/vim-over'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'voldikss/vim-browser-search'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'}
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'haya14busa/incsearch.vim'
@@ -115,7 +117,7 @@ Plug 'poliquin/stata-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'Vigemus/iron.nvim'
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+Plug 'liuchengxu/vim-clap', {'do': ':Clap install-binary!'}
 Plug 'machakann/vim-highlightedyank'
 Plug 'itchyny/calendar.vim'
 Plug 'kevinhwang91/rnvimr', {'do': 'make sync'}
@@ -123,8 +125,17 @@ Plug 'wincent/terminus'
 Plug 'rhysd/clever-f.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'chrisbra/NrrwRgn'
-Plug 'brooth/far.vim'
 Plug 't9md/vim-choosewin'
+Plug 'ncm2/ncm2'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'ncm2/ncm2-jedi'
+Plug 'roxma/nvim-yarp'
+Plug 'jiangmiao/auto-pairs'
+Plug 'mhartington/oceanic-next'
+Plug 'AndrewRadev/switch.vim'
+Plug 'arcticicestudio/nord-vim'
+Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 
@@ -145,9 +156,17 @@ call plug#end()
 " colorscheme jellybeans
 
 " let ayucolor="light"
-let ayucolor="mirage"
+" let ayucolor="mirage"
 " let ayucolor="dark"
-colorscheme ayu
+" colorscheme ayu
+
+" colorscheme OceanicNext
+
+let g:nord_cursor_line_number_background = 1
+let g:nord_uniform_status_lines = 1
+let g:nord_bold_vertical_split_line = 1
+let g:nord_uniform_diff_background = 1
+colorscheme nord
 
 
 " -------------------  airline  ---------------------
@@ -156,8 +175,9 @@ colorscheme ayu
 " let g:airline_theme='bubblegum'
 " let g:airline_theme='wombat'
 " let g:airline_theme='term'
+" let g:airline_theme='oceanicnext'
 
-let g:airline_theme='wombat'
+let g:airline_theme='nord'
 
 let g:airline_powerline_fonts = 0
 let g:airline#extensions#branch#enabled = 1
@@ -192,27 +212,35 @@ let g:airline_section_warning = ''
 
 
 " -------------------  coc  ---------------------
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+" if exists('*complete_info')
+"   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+" else
+"   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" endif
 
-let g:coc_global_extensions = [
-            \'coc-python',
-            \'coc-pairs'
-            \]
+" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" inoremap <silent><expr> <C-,> coc#refresh()
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gr <Plug>(coc-references)
+" nmap gn <Plug>(coc-rename)
+
+" let g:coc_global_extensions = [
+"             \'coc-lists',
+"             \'coc-pairs'
+"             \]
 
 
 " -------------------  iron.vim  ---------------------
@@ -220,7 +248,7 @@ let g:iron_map_defaults = 0
 
 
 " -------------------  vim-repl  ---------------------
-if !has('nvim')
+if has('vim')
     let g:repl_program = {
                 \   'python': ['ipython'],
                 \   'default': ['zsh'],
@@ -454,13 +482,32 @@ let g:choosewin_color_overlay_current = {
 nmap \ <Plug>(choosewin)
 
 
+" -------------------  auto-pairs  ---------------------
+let g:AutoPairsMapCR = 0
+
+
+" -------------------  ncm2  ---------------------
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+let g:python3_host_prog = expand('~/anaconda3/bin/python')
+
+
+" -------------------  switch  ---------------------
+let g:switch_custom_definitions =
+    \ [
+    \   ['&', '|'],
+    \   ['>=', '<='],
+    \   ['True', 'False'],
+    \   ['true', 'false']
+    \ ]
+
+
 " -------------------  fzf  ---------------------
 let g:fzf_buffers_jump = 1
 let $FZF_DEFAULT_OPTS="--reverse"
-
-" if has('nvim')
-"     let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
-" endif
 
 if executable('rg')
   let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
@@ -488,35 +535,39 @@ command! -bang -nargs=* RgWord
 
 " floating fzf window with borders
 " Ref: https://github.com/Blacksuan19/init.nvim/blob/master/init.vim
-function! CreateCenteredFloatingWindow()
-    let width = min([&columns - 4, max([80, &columns - 30])])
-    let height = min([&lines - 4, max([20, &lines - 20])])
-    let top = ((&lines - height) / 2) - 1
-    let left = (&columns - width) / 2
-    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+" function! CreateCenteredFloatingWindow()
+"     let width = min([&columns - 4, max([80, &columns - 30])])
+"     let height = min([&lines - 4, max([20, &lines - 20])])
+"     let top = ((&lines - height) / 2) - 1
+"     let left = (&columns - width) / 2
+"     let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
 
-    let top = "╭" . repeat("─", width - 2) . "╮"
-    let mid = "│" . repeat(" ", width - 2) . "│"
-    let bot = "╰" . repeat("─", width - 2) . "╯"
-    let lines = [top] + repeat([mid], height - 2) + [bot]
-    let s:buf = nvim_create_buf(v:false, v:true)
-    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
-    call nvim_open_win(s:buf, v:true, opts)
-    set winhl=Normal:Floating
-    let opts.row += 1
-    let opts.height -= 2
-    let opts.col += 2
-    let opts.width -= 4
-    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-    au BufWipeout <buffer> exe 'bw '.s:buf
-    setlocal
-        \ buftype=nofile
-        \ nobuflisted
-        \ bufhidden=hide
-        \ nonumber
-        \ norelativenumber
-        \ signcolumn=no
-endfunction
+"     let top = "╭" . repeat("─", width - 2) . "╮"
+"     let mid = "│" . repeat(" ", width - 2) . "│"
+"     let bot = "╰" . repeat("─", width - 2) . "╯"
+"     let lines = [top] + repeat([mid], height - 2) + [bot]
+"     let s:buf = nvim_create_buf(v:false, v:true)
+"     call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+"     call nvim_open_win(s:buf, v:true, opts)
+"     set winhl=Normal:Floating
+"     let opts.row += 1
+"     let opts.height -= 2
+"     let opts.col += 2
+"     let opts.width -= 4
+"     call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+"     au BufWipeout <buffer> exe 'bw '.s:buf
+"     setlocal
+"         \ buftype=nofile
+"         \ nobuflisted
+"         \ bufhidden=hide
+"         \ nonumber
+"         \ norelativenumber
+"         \ signcolumn=no
+" endfunction
+
+" if has('nvim')
+"     let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
+" endif
 
 
 " -------------------  cursor  ---------------------
@@ -549,8 +600,10 @@ autocmd BufRead,BufNewFile *.md setlocal spell
 
 
 " auto pairs
-autocmd FileType stata let b:coc_pairs_disabled = ['`']
-autocmd FileType markdown let b:coc_pairs_disabled = ['`']
+" autocmd FileType stata let b:coc_pairs_disabled = ['`']
+" autocmd FileType markdown let b:coc_pairs_disabled = ['`']
+au Filetype markdown let b:AutoPairs = {'(':')','{':'}',"'":"'",'"':'"','*':'*'}
+au Filetype stata let b:AutoPairs = {'(':')','{':'}',"'":"'",'"':'"'}
 
 
 " automatic table mode
@@ -612,7 +665,7 @@ if has('nvim')
     " rg search
     nnoremap <leader>sg :<C-u>Rg<Space>
     " rg search cursor word
-    nnoremap <leader>sW :<C-u>RgWord<cr>
+    nnoremap <leader>sw :<C-u>RgWord<cr>
 endif
 
 if has('vim')
@@ -914,6 +967,8 @@ nmap dsf ds]
 nmap dsh ds}
 nmap dsd ds'
 nmap dsy ds"
+" add space around =
+nnoremap ,d i<Space><Esc>la<Space><Esc>
 
 
 " -------------------  incsearch.vim  ---------------------
@@ -940,7 +995,7 @@ nnoremap <leader>gs :Gstatus<cr>
 
 
 " -------------------  Python  ---------------------
-if !has('nvim')
+if has('vim')
     augroup python_key_map
         autocmd! python_key_map
         " toggle ipython
@@ -1040,4 +1095,4 @@ cnoremap dh =
 " tnoremap sj ^
 " tnoremap mj $
 " tnoremap dh =
-"
+
