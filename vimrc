@@ -49,6 +49,7 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=4
+set autoindent
 set clipboard=unnamed
 set nobackup
 set nowritebackup
@@ -135,7 +136,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'mhartington/oceanic-next'
 Plug 'AndrewRadev/switch.vim'
 Plug 'arcticicestudio/nord-vim'
-Plug 'christoomey/vim-tmux-navigator'
+" Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 
@@ -336,6 +337,7 @@ let g:indentLine_char = '┆'
 " -------------------  python-syntax  ---------------------
 let g:python_highlight_all = 1
 let python_highlight_space_errors = 0
+let g:python_highlight_indent_errors = 0
 
 
 " -------------------  vim-browser-search  ---------------------
@@ -424,30 +426,6 @@ map , <Plug>(clever-f-repeat-back)
 " -------------------  highlightedyank  ---------------------
 let g:highlightedyank_highlight_duration = 300
 highlight HighlightedyankRegion gui=bold guibg=#005faf
-
-
-" -------------------  far  ---------------------
-nnoremap <silent> <leader>sf :Farf<cr>
-vnoremap <silent> <leader>sf :Farf<cr>
-nnoremap <silent> <leader>sh :Farr<cr>
-vnoremap <silent> <leader>sh :Farr<cr>
-let g:far#window_layout = 'bottom'
-let g:far#window_height = 30
-let g:far#auto_preview_on_start = 0
-let g:far#debug = 1
-let g:far#window_width = 60
-let g:far#auto_preview = 1
-let g:far#preview_window_height = 7
-let g:far#auto_write_replaced_buffers = 0
-let g:far#check_window_resize_period = 0
-let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.py', '**/*.vim', '**/*.txt']
-let g:far#prompt_mapping = {
-    \ 'quit'           : { 'key' : '<esc>', 'prompt' : 'Esc' },
-    \ 'regex'          : { 'key' : '<C-r>', 'prompt' : '^r'  },
-    \ 'case_sensitive' : { 'key' : '<C-c>', 'prompt' : '^c'  },
-    \ 'word'           : { 'key' : '<C-w>', 'prompt' : "^w"  },
-    \ 'substitute'     : { 'key' : '<C-h>', 'prompt' : '^h'  },
-    \ }
 
 
 " -------------------  vim-clap  ---------------------
@@ -592,7 +570,7 @@ command! BufferOnly execute '%bdelete|edit #|normal `"'
 
 
 " python
-autocmd BufRead,BufNewFile *.py setlocal textwidth=80 colorcolumn=80 noexpandtab
+autocmd BufRead,BufNewFile *.py setlocal textwidth=80 colorcolumn=80
 
 
 " markdown
@@ -648,7 +626,7 @@ if has('nvim')
     " search files
     nnoremap <leader>fF :<C-u>Files:<cr>
     " search files in current directory
-    nnoremap <leader>f. :<C-u>Clap filer .<cr>
+    nnoremap <leader>f. :<C-u>Clap files .<cr>
     " search files in my git project
     nnoremap <leader>fp :<C-u>Clap filer ~/Git<cr>
     " search most recent files
@@ -1017,7 +995,7 @@ if has('nvim')
     nmap <leader>rc <Plug>(iron-clear)
     autocmd Filetype python nnoremap ,t :IronRepl<cr><Esc>
     autocmd Filetype python nnoremap ,s :IronRestart<cr><Esc>
-    autocmd Filetype python vmap ,r <Plug>(iron-visual-send)
+    autocmd Filetype python vmap ,r <Plug>(iron-visual-send)'>j
     autocmd Filetype python nmap ,r <Plug>(iron-send-line)
     autocmd Filetype python nmap ,i <plug>(iron-interrupt)
     autocmd Filetype python nmap ,q <Plug>(iron-exit)
